@@ -1,0 +1,4 @@
+#ifndef DATAOBSERVER_H
+#define DATAOBSERVER_H
+
+#endif // DATAOBSERVER_H

@@ -1,0 +1,4 @@
+#ifndef DATAPUBLISHER_H
+#define DATAPUBLISHER_H
+
+#endif // DATAPUBLISHER_H
