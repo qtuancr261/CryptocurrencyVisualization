@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += network
+QT       += charts
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = CryptocurrencyVisualization
@@ -25,10 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    Model/coin.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    Model/coin.h \
+    Observer/dataobserver.h \
+    Publisher/datapublisher.h
 
 FORMS += \
         mainwindow.ui
