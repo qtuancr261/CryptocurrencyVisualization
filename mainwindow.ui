@@ -68,13 +68,13 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QGroupBox" name="groupBox">
+      <widget class="QGroupBox" name="groupBoxQChart">
        <property name="title">
         <string>How do we visualize data ?</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QCommandLinkButton" name="commandLinkButton">
+         <widget class="QCommandLinkButton" name="buttonShowLineChart">
           <property name="text">
            <string>Line Chart</string>
           </property>
@@ -84,7 +84,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QCommandLinkButton" name="commandLinkButton_2">
+         <widget class="QCommandLinkButton" name="buttonShowBarChart">
           <property name="text">
            <string>Bar Chart</string>
           </property>
@@ -94,7 +94,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QCommandLinkButton" name="commandLinkButton_3">
+         <widget class="QCommandLinkButton" name="buttonShowSplineChart">
           <property name="text">
            <string>Spline Chart</string>
           </property>
@@ -129,7 +129,7 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QGroupBox" name="groupBox_2">
+      <widget class="QGroupBox" name="groupBoxCrytocurrencyManagement">
        <property name="title">
         <string>Crytocurrency Lists</string>
        </property>
@@ -137,24 +137,24 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="lineEditFilter"/>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="toolButtonAddNewList">
             <property name="text">
              <string>...</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton_2">
+           <widget class="QToolButton" name="toolButtonRemoveList">
             <property name="text">
              <string>...</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton_3">
+           <widget class="QToolButton" name="toolButtonConfigList">
             <property name="text">
              <string>...</string>
             </property>
@@ -163,10 +163,10 @@
          </layout>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox"/>
+         <widget class="QComboBox" name="comboBoxCryptoList"/>
         </item>
         <item>
-         <widget class="QListView" name="listView"/>
+         <widget class="QListView" name="listViewCryptocurrency"/>
         </item>
        </layout>
       </widget>
