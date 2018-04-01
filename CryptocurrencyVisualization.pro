@@ -27,13 +27,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    Model/coin.cpp
+    Model/coin.cpp \
+    Model/coincollection.cpp
 
 HEADERS += \
         mainwindow.h \
     Model/coin.h \
     Observer/dataobserver.h \
-    Publisher/datapublisher.h
+    Publisher/datapublisher.h \
+    Model/coincollection.h
 
 FORMS += \
         mainwindow.ui
