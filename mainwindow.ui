@@ -104,6 +104,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QCommandLinkButton" name="buttonShowPieChart">
+          <property name="text">
+           <string>Pie Chart</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -163,7 +173,13 @@
          </layout>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBoxCryptoList"/>
+         <widget class="QComboBox" name="comboBoxCryptoList">
+          <item>
+           <property name="text">
+            <string>My Favourite Coins</string>
+           </property>
+          </item>
+         </widget>
         </item>
         <item>
          <widget class="QListView" name="listViewCryptocurrency"/>
