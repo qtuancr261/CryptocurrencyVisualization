@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
-
+#include "Publisher/coindatastation.h"
 namespace Ui {
 class MainWindow;
 }
@@ -16,6 +16,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    CoinDataStation* dataStation;
 };
 
 #endif // MAINWINDOW_H
