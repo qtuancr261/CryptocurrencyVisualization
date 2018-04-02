@@ -28,14 +28,18 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     Model/coin.cpp \
-    Model/coincollection.cpp
+    Model/coincollection.cpp \
+    Publisher/coindatastation.cpp \
+    Model/crywsapi.cpp
 
 HEADERS += \
         mainwindow.h \
     Model/coin.h \
     Observer/dataobserver.h \
     Publisher/datapublisher.h \
-    Model/coincollection.h
+    Model/coincollection.h \
+    Publisher/coindatastation.h \
+    Model/crywsapi.h
 
 FORMS += \
         mainwindow.ui
