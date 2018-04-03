@@ -2,7 +2,7 @@
 #define COINDATASTATION_H
 
 #include <QObject>
-#include <map>
+#include <QHash>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -18,7 +18,7 @@ class CoinDataStation : public QObject, public DataPublisher
 {
     Q_OBJECT
 private:
-    map<QString, CoinPtr> trackedCoins;
+    QHash<QString, CoinPtr> trackedCoins;
     QNetworkAccessManager* networkManager;
     CryWSAPI API;
 public:
