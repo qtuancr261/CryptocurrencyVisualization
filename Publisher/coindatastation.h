@@ -9,6 +9,9 @@
 #include <QtDebug>
 #include "Publisher/datapublisher.h"
 #include "Model/crywsapi.h"
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 using std::map;
 using CoinPtr = shared_ptr<Coin>;
 class CoinDataStation : public QObject, public DataPublisher
