@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ico/collectionAdd.ico</file>
+        <file>ico/collectionDelete.ico</file>
+        <file>ico/collectionSetting.ico</file>
+    </qresource>
+</RCC>
