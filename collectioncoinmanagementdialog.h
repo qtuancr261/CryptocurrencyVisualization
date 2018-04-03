@@ -14,6 +14,8 @@ class CollectionCoinManagementDialog : public QDialog
 public:
     explicit CollectionCoinManagementDialog(QWidget *parent = 0);
     ~CollectionCoinManagementDialog();
+public slots:
+    void showAddNewCollectionCoin();
 
 private:
     Ui::CollectionCoinManagementDialog *ui;

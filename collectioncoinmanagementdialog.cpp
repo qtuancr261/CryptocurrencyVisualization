@@ -12,3 +12,10 @@ CollectionCoinManagementDialog::~CollectionCoinManagementDialog()
 {
     delete ui;
 }
+
+void CollectionCoinManagementDialog::showAddNewCollectionCoin()
+{
+    this->setWindowTitle("Add new collection");
+    this->setWindowIcon(QIcon(":/ico/collectionAdd.ico"));
+    this->exec();
+}
