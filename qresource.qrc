@@ -3,5 +3,10 @@
         <file>ico/collectionAdd.ico</file>
         <file>ico/collectionDelete.ico</file>
         <file>ico/collectionSetting.ico</file>
+        <file>ico/leftArrow.ico</file>
+        <file>ico/rightArrow.ico</file>
+        <file>ico/doubleLeftArrow.ico</file>
+        <file>ico/doubleRightArrow.ico</file>
+        <file>ico/cash.ico</file>
     </qresource>
 </RCC>
