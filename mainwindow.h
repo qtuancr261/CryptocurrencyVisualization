@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include <QMainWindow>
 #include "Publisher/coindatastation.h"
+#include "collectioncoinmanagementdialog.h"
 namespace Ui {
 class MainWindow;
 }
@@ -17,6 +18,7 @@ public:
 private:
     Ui::MainWindow *ui;
     CoinDataStation* dataStation;
+    CollectionCoinManagementDialog* collectionManagerDialog;
 };
 
 #endif // MAINWINDOW_H
