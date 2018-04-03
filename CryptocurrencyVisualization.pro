@@ -30,7 +30,8 @@ SOURCES += \
     Model/coin.cpp \
     Model/coincollection.cpp \
     Publisher/coindatastation.cpp \
-    Model/crywsapi.cpp
+    Model/crywsapi.cpp \
+    collectioncoinmanagementdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,10 +40,12 @@ HEADERS += \
     Publisher/datapublisher.h \
     Model/coincollection.h \
     Publisher/coindatastation.h \
-    Model/crywsapi.h
+    Model/crywsapi.h \
+    collectioncoinmanagementdialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    collectioncoinmanagementdialog.ui
 
 RESOURCES += \
     qresource.qrc
