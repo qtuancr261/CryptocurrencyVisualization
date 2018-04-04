@@ -8,5 +8,6 @@
         <file>ico/doubleLeftArrow.ico</file>
         <file>ico/doubleRightArrow.ico</file>
         <file>ico/cash.ico</file>
+        <file>ico/coin.png</file>
     </qresource>
 </RCC>
