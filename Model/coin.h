@@ -3,13 +3,14 @@
 #include <QString>
 #include <QIcon>
 #include <QVector>
+#include <QListWidgetItem>
 using ulong = unsigned long;
 class Coin
 {
 private:
     QString name;
     QString symbol;
-    QIcon icon;
+    QListWidgetItem displayItem;
     long available_supply;
     struct value
     {
@@ -28,10 +29,10 @@ public:
     void setName(const QString &value);
     QString getSymbol() const;
     void setSymbol(const QString &value);
-    QIcon getIcon() const;
-    void setIcon(const QIcon &value);
     long getAvailable_supply() const;
     void setAvailable_supply(long value);
+    QListWidgetItem& getDisplayItem();
+    void setDisplayItem(const QListWidgetItem &value);
 };
 
 #endif // COIN_H

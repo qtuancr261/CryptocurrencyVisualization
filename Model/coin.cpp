@@ -1,8 +1,19 @@
 #include "coin.h"
 
+QListWidgetItem &Coin::getDisplayItem()
+{
+    return displayItem;
+}
+
+void Coin::setDisplayItem(const QListWidgetItem &value)
+{
+    displayItem = value;
+}
+
 Coin::Coin(QString name, QString symbol)
     : name{name},
       symbol{symbol},
+      displayItem{QListWidgetItem(QIcon(":/ico/coin.png"), name + " - " + symbol)},
       available_supply{},
       lastValue{}
 {
@@ -27,16 +38,6 @@ QString Coin::getSymbol() const
 void Coin::setSymbol(const QString &value)
 {
     symbol = value;
-}
-
-QIcon Coin::getIcon() const
-{
-    return icon;
-}
-
-void Coin::setIcon(const QIcon &value)
-{
-    icon = value;
 }
 
 long Coin::getAvailable_supply() const
