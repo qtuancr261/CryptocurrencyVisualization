@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1003</width>
-    <height>546</height>
+    <height>673</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -96,7 +96,7 @@
            <item>
             <layout class="QGridLayout" name="gridLayout">
              <item row="0" column="0" rowspan="5">
-              <widget class="QListView" name="listViewAvailableCoins"/>
+              <widget class="QListWidget" name="listWidgetAvailableCoins"/>
              </item>
              <item row="0" column="1">
               <widget class="QPushButton" name="pushButtonMoveItemToLeft">
@@ -110,7 +110,7 @@
               </widget>
              </item>
              <item row="0" column="2" rowspan="5">
-              <widget class="QListView" name="listViewTrackedCoins"/>
+              <widget class="QListWidget" name="listWidgetTrackedCoins"/>
              </item>
              <item row="1" column="1">
               <widget class="QPushButton" name="pushButtonMoveItemsToRight">
@@ -177,19 +177,6 @@
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
-   </item>
-   <item>
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>982</width>
-       <height>18</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
