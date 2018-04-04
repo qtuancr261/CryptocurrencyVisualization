@@ -1,5 +1,10 @@
 #include "coindatastation.h"
 
+const QHash<QString, CoinPtr> &CoinDataStation::getTrackedCoins() const
+{
+    return trackedCoins;
+}
+
 CoinDataStation::CoinDataStation(QObject *parent)
     : QObject(parent),
       networkManager{new QNetworkAccessManager(this)}
@@ -28,22 +33,15 @@ void CoinDataStation::gotLastValueOfALLCoins(QNetworkReply *replyFromServer)
     {
         QJsonObject currentObj{jsonArray.at(0).toArray().at(i).toObject()};
         QJsonObject currentValue{currentObj.value("last_values").toObject()};
-        qDebug() << currentObj.value("symbol").toString() << " - " << currentObj.value("name").toString();
-        qDebug() << currentValue.value("price").toString() << currentValue.value("timeStamp").toString();
-
+        QString symbol{currentObj.value("symbol").toString()};
+        QString name{currentObj.value("name").toString()};
+        qDebug() << currentValue.value("price").toDouble() << currentValue.value("timeStamp").toDouble();
+        CoinPtr currentCoin{make_shared<Coin>(name, symbol)};
+        trackedCoins.insert(symbol, currentCoin);
         //qDebug() << jsonArray.at(0).toArray().at(i).toObject().value("symbol").toString();
         //
     }
-    /*QJsonArray jsonArray2{jsonArray.at(0)};
-    if (jsonArray2.isEmpty())
-        qDebug() << "Empty";
-    else if (jsonArray2.at(0).isObject())
-        qDebug() << "Object";
-    else if (jsonArray2.at(0).isArray())
-        qDebug() << "Array";
-    QJsonArray jsonArray3{jsonArray2.at(0)};
-    QJsonArray jsonArray4{jsonArray3.at(0).toArray()};
-    qDebug() << jsonArray3.at(0).toArray().at(0);*/
+    emit parseLastValueOfAllCoinsCompleted(trackedCoins);
 }
 
 

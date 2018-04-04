@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QHashIterator>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -25,7 +26,7 @@ public:
     explicit CoinDataStation(QObject *parent = nullptr);
 
 signals:
-
+    void parseLastValueOfAllCoinsCompleted(const QHash<QString, CoinPtr>& availableCoins);
 public slots:
     void getLastValueOfAllCoins();
     void gotLastValueOfALLCoins(QNetworkReply* replyFromServer);
@@ -34,6 +35,7 @@ public:
     virtual void registerObserver(const DataObserverPtr &observer) override;
     virtual void removeObserver(const DataObserverPtr &observer) override;
     virtual void notifyAllObservers() override;
+    const QHash<QString, CoinPtr>& getTrackedCoins() const;
 };
 
 #endif // COINDATASTATION_H
