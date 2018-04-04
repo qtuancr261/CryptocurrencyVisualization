@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     dataStation->getLastValueOfAllCoins();
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), collectionManagerDialog, SLOT(showAddNewCollectionCoin()));
+    //QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), dataStation, SLOT(getLastValueOfAllCoins()));
+    QObject::connect(dataStation, SIGNAL(parseLastValueOfAllCoinsCompleted(QHash<QString,CoinPtr>)), collectionManagerDialog, SLOT(loadAvailableCoins(QHash<QString,CoinPtr>)));
 }
 
 MainWindow::~MainWindow()
