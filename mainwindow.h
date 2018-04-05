@@ -19,6 +19,10 @@ private:
     Ui::MainWindow *ui;
     CoinDataStation* dataStation;
     CollectionCoinManagementDialog* collectionManagerDialog;
+
+public slots:
+    void disableAllToolButtonRelativeWithCollectionList();
+    void enableAllToolButtonRelativeWithCollectionList();
 };
 
 #endif // MAINWINDOW_H
