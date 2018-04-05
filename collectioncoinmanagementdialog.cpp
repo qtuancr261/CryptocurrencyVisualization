@@ -12,6 +12,11 @@ CollectionCoinManagementDialog::CollectionCoinManagementDialog(QWidget *parent) 
     QObject::connect(ui->pushButtonMoveItemToLeft, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveSelectedCoinsToAvailableCoins);
     QObject::connect(ui->pushButtonMoveAllToRight, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveAllCoinsToTrackedCoins);
     QObject::connect(ui->pushButtonMoveAllToLeft, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveAllCoinsToAvailableCoins);
+
+    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::accepted, this, &CollectionCoinManagementDialog::finishedCurrentAction);
+    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::rejected, this, &CollectionCoinManagementDialog::finishedCurrentAction);
+    QObject::connect(this, &CollectionCoinManagementDialog::accepted, this, &CollectionCoinManagementDialog::finishedCurrentAction);
+    QObject::connect(this, &CollectionCoinManagementDialog::rejected, this, &CollectionCoinManagementDialog::finishedCurrentAction);
 }
 
 CollectionCoinManagementDialog::~CollectionCoinManagementDialog()
@@ -24,6 +29,15 @@ void CollectionCoinManagementDialog::showAddNewCollectionCoin()
     this->setWindowTitle("Add new collection");
     this->setWindowIcon(QIcon(":/ico/collectionAdd.ico"));
     this->show();
+    this->raise();
+}
+
+void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin()
+{
+    this->setWindowTitle("Configure collection");
+    this->setWindowIcon(QIcon(":/ico/collectionSetting.ico"));
+    this->show();
+    this->raise();
 }
 
 void CollectionCoinManagementDialog::loadAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
