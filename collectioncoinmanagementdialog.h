@@ -19,12 +19,15 @@ public:
     ~CollectionCoinManagementDialog();
 public slots:
     void showAddNewCollectionCoin();
+    void showConfigureCurrentCollectionCoin();
     void loadAvailableCoins(const QHash<QString, CoinPtr>& availableCoins);
     void loadAvailableCoinsAndTrackedCoins(const CoinDataStation& coinDataStation, const CoinCollection& coinCollection);
     void moveSelectedCoinsToTrackedCoins();
     void moveSelectedCoinsToAvailableCoins();
     void moveAllCoinsToTrackedCoins();
     void moveAllCoinsToAvailableCoins();
+signals:
+    void finishedCurrentAction();
 private:
     Ui::CollectionCoinManagementDialog *ui;
 };
