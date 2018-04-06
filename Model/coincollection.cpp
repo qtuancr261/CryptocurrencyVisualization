@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "coincollection.h"
 
 const QHash<QString, CoinPtr> &CoinCollection::getTrackedCoins() const
@@ -21,7 +23,19 @@ void CoinCollection::removeTrackedCoin(const QString &coinSymbol)
         qDebug() << "Remove Tracked Coin failed ";
 }
 
-CoinCollection::CoinCollection(QObject *parent) : QObject(parent)
+const QString &CoinCollection::getName() const
 {
+    return name;
+}
 
+void CoinCollection::setName(const QString &value)
+{
+    name = value;
+}
+
+CoinCollection::CoinCollection(QString name, QObject *parent)
+    : QObject(parent),
+      name{std::move(name)}
+{
+    
 }
