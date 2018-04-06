@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1003</width>
-    <height>673</height>
+    <width>771</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -184,22 +184,6 @@
   <include location="qresource.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>buttonControllerBox</sender>
-   <signal>accepted()</signal>
-   <receiver>CollectionCoinManagementDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonControllerBox</sender>
    <signal>rejected()</signal>
