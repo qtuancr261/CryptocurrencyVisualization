@@ -13,13 +13,13 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-using std::map;
-using CoinPtr = shared_ptr<Coin>;
+using DataObserverPtr = shared_ptr<DataObserver>;
 class CoinDataStation : public QObject, public DataPublisher
 {
     Q_OBJECT
 private:
     QHash<QString, CoinPtr> trackedCoins;
+    QHash<QString, DataObserverPtr> observers;
     QNetworkAccessManager* networkManager;
     CryWSAPI API;
 public:

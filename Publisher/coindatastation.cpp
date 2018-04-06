@@ -35,7 +35,7 @@ void CoinDataStation::gotLastValueOfALLCoins(QNetworkReply *replyFromServer)
         QJsonObject currentValue{currentObj.value("last_values").toObject()};
         QString symbol{currentObj.value("symbol").toString()};
         QString name{currentObj.value("name").toString()};
-        qDebug() << currentValue.value("price").toDouble() << currentValue.value("timeStamp").toDouble();
+        //qDebug() << currentValue.value("price").toDouble() << currentValue.value("timeStamp").toDouble();
         CoinPtr currentCoin{make_shared<Coin>(name, symbol)};
         trackedCoins.insert(symbol, currentCoin);
         //qDebug() << jsonArray.at(0).toArray().at(i).toObject().value("symbol").toString();
