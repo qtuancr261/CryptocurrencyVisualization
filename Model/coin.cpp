@@ -1,19 +1,29 @@
 #include "coin.h"
 
-QListWidgetItem &Coin::getDisplayItem()
+QListWidgetItemPtr &Coin::getRefDisplayItem()
 {
     return displayItem;
 }
 
-void Coin::setDisplayItem(const QListWidgetItem &value)
+void Coin::setDisplayItem(const QListWidgetItemPtr &value)
 {
     displayItem = value;
+}
+
+Coin::~Coin()
+{
+    qDebug() << "Coin has been deleted";
+}
+
+QListWidgetItemPtr Coin::getDisplayItem() const
+{
+    return displayItem;
 }
 
 Coin::Coin(QString name, QString symbol)
     : name{name},
       symbol{symbol},
-      displayItem{QListWidgetItem(QIcon(":/ico/coin.png"), name + " - " + symbol)},
+      displayItem{make_shared<QListWidgetItem>(QIcon(":/ico/coin.png"), name + " - " + symbol)},
       available_supply{},
       lastValue{}
 {

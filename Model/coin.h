@@ -4,13 +4,18 @@
 #include <QIcon>
 #include <QVector>
 #include <QListWidgetItem>
+#include <QtDebug>
+#include <memory>
+using std::shared_ptr;
+using std::make_shared;
+using QListWidgetItemPtr = shared_ptr<QListWidgetItem>;
 using ulong = unsigned long;
 class Coin
 {
 private:
     QString name;
     QString symbol;
-    QListWidgetItem displayItem;
+    QListWidgetItemPtr displayItem;
     long available_supply;
     struct value
     {
@@ -31,8 +36,10 @@ public:
     void setSymbol(const QString &value);
     long getAvailable_supply() const;
     void setAvailable_supply(long value);
-    QListWidgetItem& getDisplayItem();
-    void setDisplayItem(const QListWidgetItem &value);
+    QListWidgetItemPtr& getRefDisplayItem();
+    void setDisplayItem(const QListWidgetItemPtr &value);
+    ~Coin();
+    QListWidgetItemPtr getDisplayItem() const;
 };
 
 #endif // COIN_H
