@@ -8,15 +8,19 @@ MainWindow::MainWindow(QWidget *parent) :
     collectionManagerDialog{new CollectionCoinManagementDialog(this)}
 {
     ui->setupUi(this);
-    dataStation->getLastValueOfAllCoins();
+    //------------------------------------------------------
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), collectionManagerDialog, SLOT(showAddNewCollectionCoin()));
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), this , SLOT(disableAllToolButtonRelativeWithCollectionList()));
 
     QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), collectionManagerDialog, SLOT(showConfigureCurrentCollectionCoin()));
     QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), this, SLOT(disableAllToolButtonRelativeWithCollectionList()));
     //QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), dataStation, SLOT(getLastValueOfAllCoins()));
-    QObject::connect(dataStation, SIGNAL(parseLastValueOfAllCoinsCompleted(QHash<QString,CoinPtr>)), collectionManagerDialog, SLOT(loadAvailableCoins(QHash<QString,CoinPtr>)));
+    QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, collectionManagerDialog, &CollectionCoinManagementDialog::getAvailableCoins);
+    QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::finishedPreloadAvailableCoins,  this, &MainWindow::show);
     QObject::connect(collectionManagerDialog, SIGNAL(finishedCurrentAction()), this, SLOT(enableAllToolButtonRelativeWithCollectionList()));
+
+    // First action
+    dataStation->getLastValueOfAllCoins();
 }
 
 MainWindow::~MainWindow()
