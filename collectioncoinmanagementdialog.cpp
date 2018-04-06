@@ -6,6 +6,8 @@ CollectionCoinManagementDialog::CollectionCoinManagementDialog(QWidget *parent) 
     ui(new Ui::CollectionCoinManagementDialog)
 {
     ui->setupUi(this);
+    this->setToolTip("GTK");
+    ui->lineEditCollectionName->setToolTip("Collection name must not be empty");
     ui->listWidgetAvailableCoins->setSelectionMode(QAbstractItemView::ExtendedSelection);
     ui->listWidgetTrackedCoins->setSelectionMode(QAbstractItemView::ExtendedSelection);
     QObject::connect(ui->pushButtonMoveItemsToRight, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveSelectedCoinsToTrackedCoins);
@@ -13,8 +15,7 @@ CollectionCoinManagementDialog::CollectionCoinManagementDialog(QWidget *parent) 
     QObject::connect(ui->pushButtonMoveAllToRight, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveAllCoinsToTrackedCoins);
     QObject::connect(ui->pushButtonMoveAllToLeft, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveAllCoinsToAvailableCoins);
 
-    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::accepted, this, &CollectionCoinManagementDialog::finishedCurrentAction);
-    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::rejected, this, &CollectionCoinManagementDialog::finishedCurrentAction);
+    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::accepted, this, &CollectionCoinManagementDialog::checkNewCollectionContents);
     QObject::connect(this, &CollectionCoinManagementDialog::accepted, this, &CollectionCoinManagementDialog::finishedCurrentAction);
     QObject::connect(this, &CollectionCoinManagementDialog::rejected, this, &CollectionCoinManagementDialog::finishedCurrentAction);
 }
@@ -28,6 +29,21 @@ void CollectionCoinManagementDialog::showAddNewCollectionCoin()
 {
     this->setWindowTitle("Add new collection");
     this->setWindowIcon(QIcon(":/ico/collectionAdd.ico"));
+    QHashIterator<QString, CoinPtr> iterQHash{trackedCoins};
+    while (ui->listWidgetAvailableCoins->count() > 0)
+    {
+        ui->listWidgetAvailableCoins->takeItem(0);
+    }
+
+    while (ui->listWidgetTrackedCoins->count() > 0)
+    {
+        ui->listWidgetTrackedCoins->takeItem(0);
+    }
+    while(iterQHash.hasNext())
+    {
+        iterQHash.next();
+        ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
+    }
     this->show();
     this->raise();
 }
@@ -40,14 +56,16 @@ void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin()
     this->raise();
 }
 
-void CollectionCoinManagementDialog::loadAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
+void CollectionCoinManagementDialog::getAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
 {
-    QHashIterator<QString, CoinPtr> iterQHash{availableCoins};
+    trackedCoins = availableCoins;
+    emit finishedPreloadAvailableCoins();
+    /*QHashIterator<QString, CoinPtr> iterQHash{availableCoins};
     while(iterQHash.hasNext())
     {
         iterQHash.next();
-        ui->listWidgetAvailableCoins->addItem(&iterQHash.value()->getDisplayItem());
-    }
+        ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
+    }*/
     //ui->listWidgetAvailableCoins->show();
     //showAddNewCollectionCoin();
 }
@@ -65,9 +83,9 @@ void CollectionCoinManagementDialog::loadAvailableCoinsAndTrackedCoins(const Coi
     {
         iterQHash.next();
         if (trackedCoinFromCurrentCollection.contains(iterQHash.key()))
-            ui->listWidgetAvailableCoins->addItem(&iterQHash.value()->getDisplayItem());
+            ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
         else
-            ui->listWidgetTrackedCoins->addItem(&iterQHash.value()->getDisplayItem());
+            ui->listWidgetTrackedCoins->addItem(iterQHash.value()->getDisplayItem().get());
     }
 
 }
@@ -104,6 +122,17 @@ void CollectionCoinManagementDialog::moveAllCoinsToAvailableCoins()
     }
 }
 
+void CollectionCoinManagementDialog::checkNewCollectionContents()
+{
+    if (ui->lineEditCollectionName->text().isEmpty())
+        QMessageBox::warning(this, "Cannot create new collection", "Collection name must not be empty");
+    else if (ui->listWidgetTrackedCoins->count() == 0)
+        QMessageBox::warning(this, "Cannot create new collection", "You must choose at least one item for collection contents");
+    else
+        this->accept();
+
+}
+
 void CollectionCoinManagementDialog::moveSelectedCoinsToTrackedCoins()
 {
     if(ui->listWidgetAvailableCoins->selectedItems().count() < 1)
@@ -119,3 +148,11 @@ void CollectionCoinManagementDialog::moveSelectedCoinsToTrackedCoins()
     }
 
 }
+
+
+/*void CollectionCoinManagementDialog::focusInEvent(QFocusEvent *event)
+{
+    QHelpEvent* hevent{new QHelpEvent(QEvent::ToolTip, QPoint(ui->lineEditCollectionName->pos().x(), ui->lineEditCollectionName->pos().y()), QPoint(QCursor::pos().x(), QCursor::pos().y()))};
+    QApplication::postEvent(this, hevent);
+    QDialog::focusInEvent(event);
+}*/
