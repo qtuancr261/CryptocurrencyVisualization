@@ -2,11 +2,18 @@
 #include <QApplication>
 #include <QtCharts>
 #include <QLineSeries>
+#include <QSplashScreen>
+#include <QPixmap>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QSplashScreen splashScreen;
+    splashScreen.setPixmap(QPixmap(":/ico/splashScreen.jpg"));
+    splashScreen.show();
+    splashScreen.showMessage("Updating From Server......", Qt::AlignBottom | Qt::AlignLeft, Qt::white);
+    //a.processEvents();
     MainWindow w;
-    w.setWindowTitle("Cryptocurrency Visualization");
+
     QLineSeries *series = new QLineSeries();
     series->setName("BTC");
     *series << QPointF(10.0, 7000.0) << QPointF(12.0, 7325.0) << QPointF(13.0, 6808.0) << QPointF(14.0, 8200.0)
@@ -48,10 +55,12 @@ int main(int argc, char *argv[])
     //![4]
 
     //![5]
-
+    //!
+    w.setWindowTitle("Cryptocurrency Visualization");
     w.setCentralWidget(chartView);
     //w.resize(800, 600);
-    w.show();
+    //w.show();
+    splashScreen.finish(&w);
     //![5]
     return a.exec();
 }
