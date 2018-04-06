@@ -6,6 +6,10 @@
 #include "Publisher/coindatastation.h"
 #include "Model/coincollection.h"
 #include <QList>
+#include <QMessageBox>
+#include <QHelpEvent>
+#include <QToolTip>
+#include <QLineEdit>
 namespace Ui {
 class CollectionCoinManagementDialog;
 }
@@ -20,16 +24,23 @@ public:
 public slots:
     void showAddNewCollectionCoin();
     void showConfigureCurrentCollectionCoin();
-    void loadAvailableCoins(const QHash<QString, CoinPtr>& availableCoins);
+    void getAvailableCoins(const QHash<QString, CoinPtr>& availableCoins);
     void loadAvailableCoinsAndTrackedCoins(const CoinDataStation& coinDataStation, const CoinCollection& coinCollection);
     void moveSelectedCoinsToTrackedCoins();
     void moveSelectedCoinsToAvailableCoins();
     void moveAllCoinsToTrackedCoins();
     void moveAllCoinsToAvailableCoins();
+    void checkNewCollectionContents();
 signals:
     void finishedCurrentAction();
+    void finishedPreloadAvailableCoins();
 private:
     Ui::CollectionCoinManagementDialog *ui;
+    QHash<QString, CoinPtr> trackedCoins;
+
+    // QWidget interface
+protected:
+    //virtual void focusInEvent(QFocusEvent *event) override;
 };
 
 #endif // COLLECTIONCOINMANAGEMENTDIALOG_H
