@@ -3,7 +3,8 @@
 
 CollectionCoinManagementDialog::CollectionCoinManagementDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::CollectionCoinManagementDialog)
+    ui(new Ui::CollectionCoinManagementDialog),
+    dialogMode{Mode::NoMode}
 {
     ui->setupUi(this);
     this->setToolTip("GTK");
@@ -30,22 +31,24 @@ void CollectionCoinManagementDialog::showAddNewCollectionCoin()
     this->setWindowTitle("Add new collection");
     this->setWindowIcon(QIcon(":/ico/collectionAdd.ico"));
     QHashIterator<QString, CoinPtr> iterQHash{trackedCoins};
-    while (ui->listWidgetAvailableCoins->count() > 0)
+    // Remove all items when a user loads our dialog in AddNewCollectionMode;
+    if (ui->listWidgetAvailableCoins->count() == 0 && ui->listWidgetTrackedCoins->count() == 0)
     {
-        ui->listWidgetAvailableCoins->takeItem(0);
+        while(iterQHash.hasNext())
+        {
+            iterQHash.next();
+            ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
+        }
     }
-
-    while (ui->listWidgetTrackedCoins->count() > 0)
+    else
     {
-        ui->listWidgetTrackedCoins->takeItem(0);
-    }
-    while(iterQHash.hasNext())
-    {
-        iterQHash.next();
-        ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
+        while(ui->listWidgetTrackedCoins->count() > 0)
+            ui->listWidgetAvailableCoins->addItem(ui->listWidgetTrackedCoins->takeItem(0));
     }
     this->show();
     this->raise();
+    // set current mode
+    dialogMode = Mode::AddNewCollectionMode;
 }
 
 void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin()
@@ -54,6 +57,7 @@ void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin()
     this->setWindowIcon(QIcon(":/ico/collectionSetting.ico"));
     this->show();
     this->raise();
+    dialogMode = Mode::ConfigureCurrentCollectionMode;
 }
 
 void CollectionCoinManagementDialog::getAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
