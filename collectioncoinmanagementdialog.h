@@ -37,7 +37,13 @@ signals:
 private:
     Ui::CollectionCoinManagementDialog *ui;
     QHash<QString, CoinPtr> trackedCoins;
-
+    enum class Mode
+    {
+        NoMode,
+        AddNewCollectionMode,
+        ConfigureCurrentCollectionMode
+    };
+    Mode dialogMode;
     // QWidget interface
 protected:
     //virtual void focusInEvent(QFocusEvent *event) override;
