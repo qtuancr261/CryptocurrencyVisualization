@@ -20,6 +20,16 @@ QListWidgetItemPtr Coin::getDisplayItem() const
     return displayItem;
 }
 
+Coin::value &Coin::getLastValue()
+{
+    return lastValue;
+}
+
+void Coin::setLastValue(const value &value)
+{
+    lastValue = value;
+}
+
 Coin::Coin(QString name, QString symbol)
     : name{name},
       symbol{symbol},
