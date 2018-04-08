@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QListWidgetItem>
 #include <QtDebug>
+#include <QDateTime>
 #include <memory>
 using std::shared_ptr;
 using std::make_shared;
@@ -19,7 +20,7 @@ private:
     long available_supply;
     struct value
     {
-        ulong timeStamp;
+        QDateTime timeStamp;
         ulong price;
         ulong marketcap;
         double volume_24h;
@@ -40,6 +41,8 @@ public:
     void setDisplayItem(const QListWidgetItemPtr &value);
     ~Coin();
     QListWidgetItemPtr getDisplayItem() const;
+    value& getLastValue();
+    void setLastValue(const value &value);
 };
 
 #endif // COIN_H
