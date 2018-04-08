@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "ui_collectioncoinmanagementdialog.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // First action
     dataStation->getLastValueOfAllCoins();
+    QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::requestToCreateANewCollectionWith, dataStation, &CoinDataStation::createANewCollectionWith);
+    QObject::connect(dataStation, &CoinDataStation::creatingANewCollectionCompleted, this, &MainWindow::loadNewCollectionContents);
 }
 
 MainWindow::~MainWindow()
@@ -40,4 +42,17 @@ void MainWindow::enableAllToolButtonRelativeWithCollectionList()
     ui->toolButtonAddNewList->setEnabled(true);
     ui->toolButtonConfigList->setEnabled(true);
     ui->toolButtonRemoveList->setEnabled(true);
+}
+
+void MainWindow::loadNewCollectionContents(const QString &collectionName)
+{
+    ui->comboBoxCryptoList->addItem(QIcon(":/ico/collection.ico"), collectionName);
+    for (int index{}; index < collectionManagerDialog->getUi()->listWidgetTrackedCoins->count(); index++)
+    {
+        QListWidgetItem* item{new QListWidgetItem(collectionManagerDialog->getUi()->listWidgetTrackedCoins->item(index)->icon(), collectionManagerDialog->getUi()->listWidgetTrackedCoins->item(index)->text())};
+        ui->listWidgetTrackedCoins->addItem(item);
+        //ui->listWidgetTrackedCoins->addItem("FERER");
+        qDebug() << index;
+    }
+    ui->listWidgetTrackedCoins->show();
 }
