@@ -21,11 +21,11 @@ private:
     struct value
     {
         QDateTime timeStamp;
-        ulong price;
+        double price;
         ulong marketcap;
         double volume_24h;
-        double changedPercent_1h;
-        double changedPercent_24h;
+        QString changedPercent_1h;
+        QString changedPercent_24h;
     };
     value lastValue;
     QVector<value> allValues;
