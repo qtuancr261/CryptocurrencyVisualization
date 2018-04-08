@@ -23,6 +23,7 @@ private:
 public slots:
     void disableAllToolButtonRelativeWithCollectionList();
     void enableAllToolButtonRelativeWithCollectionList();
+    void loadNewCollectionContents(const QString& collectionName);
 };
 
 #endif // MAINWINDOW_H
