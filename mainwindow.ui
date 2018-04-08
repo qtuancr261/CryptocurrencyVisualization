@@ -161,6 +161,12 @@
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QComboBox" name="comboBoxCryptoList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="iconSize">
              <size>
               <width>32</width>
@@ -237,7 +243,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QListView" name="listViewCryptocurrency"/>
+         <widget class="QListWidget" name="listWidgetTrackedCoins"/>
         </item>
        </layout>
       </widget>
