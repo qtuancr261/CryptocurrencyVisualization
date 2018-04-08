@@ -10,5 +10,6 @@
         <file>ico/cash.ico</file>
         <file>ico/coin.png</file>
         <file>ico/splashScreen.jpg</file>
+        <file>ico/collection.ico</file>
     </qresource>
 </RCC>
