@@ -33,7 +33,7 @@ void Coin::setLastValue(const value &value)
 Coin::Coin(QString name, QString symbol)
     : name{name},
       symbol{symbol},
-      displayItem{make_shared<QListWidgetItem>(QIcon(":/ico/coin.png"), name + " - " + symbol)},
+      displayItem{make_shared<QListWidgetItem>(QIcon(":/ico/coin.png"), symbol + " - " + name)},
       available_supply{},
       lastValue{}
 {
