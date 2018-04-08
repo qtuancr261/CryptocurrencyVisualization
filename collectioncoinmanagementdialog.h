@@ -21,6 +21,8 @@ class CollectionCoinManagementDialog : public QDialog
 public:
     explicit CollectionCoinManagementDialog(QWidget *parent = nullptr);
     ~CollectionCoinManagementDialog();
+    Ui::CollectionCoinManagementDialog *getUi() const;
+
 public slots:
     void showAddNewCollectionCoin();
     void showConfigureCurrentCollectionCoin();
@@ -31,9 +33,11 @@ public slots:
     void moveAllCoinsToTrackedCoins();
     void moveAllCoinsToAvailableCoins();
     void checkNewCollectionContents();
+    //void configureCurrentCollectionContents();
 signals:
     void finishedCurrentAction();
     void finishedPreloadAvailableCoins();
+    void requestToCreateANewCollectionWith(const QString& colectionName,const QStringList& contents);
 private:
     Ui::CollectionCoinManagementDialog *ui;
     QHash<QString, CoinPtr> trackedCoins;
