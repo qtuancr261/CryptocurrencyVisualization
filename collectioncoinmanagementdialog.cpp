@@ -79,8 +79,6 @@ void CollectionCoinManagementDialog::loadAvailableCoinsAndTrackedCoins(const Coi
     QHash<QString, CoinPtr> availableCoinsFromServer{coinDataStation.getTrackedCoins()};
     QHash<QString, CoinPtr> trackedCoinFromCurrentCollection{coinCollection.getTrackedCoins()};
     // Removed old Items
-    ui->listWidgetAvailableCoins->clear();
-    ui->listWidgetTrackedCoins->clear();
     // Let's put all Coins in the right position
     QHashIterator<QString, CoinPtr> iterQHash{availableCoinsFromServer};
     while(iterQHash.hasNext())
@@ -128,13 +126,29 @@ void CollectionCoinManagementDialog::moveAllCoinsToAvailableCoins()
 
 void CollectionCoinManagementDialog::checkNewCollectionContents()
 {
-    if (ui->lineEditCollectionName->text().isEmpty())
-        QMessageBox::warning(this, "Cannot create new collection", "Collection name must not be empty");
-    else if (ui->listWidgetTrackedCoins->count() == 0)
-        QMessageBox::warning(this, "Cannot create new collection", "You must choose at least one item for collection contents");
-    else
-        this->accept();
+    if (dialogMode == Mode::AddNewCollectionMode)
+    {
+        if (ui->lineEditCollectionName->text().isEmpty())
+            QMessageBox::warning(this, "Cannot create new collection", "Collection name must not be empty");
+        else if (ui->listWidgetTrackedCoins->count() == 0)
+            QMessageBox::warning(this, "Cannot create new collection", "You must choose at least one item for collection contents");
+        else
+        {
+            this->accept();
+            QStringList contentsSymbol;
+            for (int index{}; index < ui->listWidgetTrackedCoins->count(); index++)
+            {
+                contentsSymbol.append(ui->listWidgetTrackedCoins->item(index)->text().section(" ", 0, 0));
+                //qDebug() << ui->listWidgetTrackedCoins->item(index)->text().section(" ", 0, 0);
+            }
+            emit requestToCreateANewCollectionWith(ui->lineEditCollectionName->text(), contentsSymbol);
+        }
+    }
+}
 
+Ui::CollectionCoinManagementDialog *CollectionCoinManagementDialog::getUi() const
+{
+    return ui;
 }
 
 void CollectionCoinManagementDialog::moveSelectedCoinsToTrackedCoins()
