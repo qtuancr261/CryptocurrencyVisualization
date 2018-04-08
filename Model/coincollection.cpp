@@ -33,9 +33,8 @@ void CoinCollection::setName(const QString &value)
     name = value;
 }
 
-CoinCollection::CoinCollection(QString name, QObject *parent)
-    : QObject(parent),
-      name{std::move(name)}
+CoinCollection::CoinCollection(QString name)
+    : name{std::move(name)}
 {
     
 }
