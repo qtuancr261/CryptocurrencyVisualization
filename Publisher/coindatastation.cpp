@@ -5,6 +5,16 @@ const QHash<QString, CoinPtr> &CoinDataStation::getTrackedCoins() const
     return trackedCoins;
 }
 
+const QHash<QString, DataObserverPtr> &CoinDataStation::getObservers() const
+{
+    return observers;
+}
+
+QHash<QString, DataObserverPtr> &CoinDataStation::getRefObservers()
+{
+    return observers;
+}
+
 CoinDataStation::CoinDataStation(QObject *parent)
     : QObject(parent),
       networkManager{new QNetworkAccessManager(this)}

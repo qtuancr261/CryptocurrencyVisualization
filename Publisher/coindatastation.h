@@ -40,6 +40,8 @@ public:
     virtual void removeObserver(const DataObserverPtr &observer) override;
     virtual void notifyAllObservers() override;
     const QHash<QString, CoinPtr>& getTrackedCoins() const;
+    const QHash<QString, DataObserverPtr>& getObservers() const;
+    QHash<QString, DataObserverPtr>& getRefObservers();
 };
 
 #endif // COINDATASTATION_H
