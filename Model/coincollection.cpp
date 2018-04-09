@@ -38,3 +38,9 @@ CoinCollection::CoinCollection(QString name)
 {
     
 }
+
+
+QHash<QString, CoinPtr> &CoinCollection::getRefTrackedCoins()
+{
+    return trackedCoins;
+}
