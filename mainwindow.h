@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include "Publisher/coindatastation.h"
 #include "collectioncoinmanagementdialog.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -23,7 +24,8 @@ private:
 public slots:
     void disableAllToolButtonRelativeWithCollectionList();
     void enableAllToolButtonRelativeWithCollectionList();
-    void loadNewCollectionContents(const QString& collectionName);
+    void addNewCollectionNameToComboBoxCryptoList(const QString& collectionName);
+    void loadCollectionContents(const QString& collectionName);
 };
 
 #endif // MAINWINDOW_H

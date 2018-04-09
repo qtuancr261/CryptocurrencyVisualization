@@ -22,7 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // First action
     dataStation->getLastValueOfAllCoins();
     QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::requestToCreateANewCollectionWith, dataStation, &CoinDataStation::createANewCollectionWith);
-    QObject::connect(dataStation, &CoinDataStation::creatingANewCollectionCompleted, this, &MainWindow::loadNewCollectionContents);
+    QObject::connect(dataStation, &CoinDataStation::creatingANewCollectionCompleted, this, &MainWindow::addNewCollectionNameToComboBoxCryptoList);
+    QObject::connect(ui->comboBoxCryptoList, &QComboBox::currentTextChanged, this, &MainWindow::loadCollectionContents);
 }
 
 MainWindow::~MainWindow()
@@ -44,15 +45,34 @@ void MainWindow::enableAllToolButtonRelativeWithCollectionList()
     ui->toolButtonRemoveList->setEnabled(true);
 }
 
-void MainWindow::loadNewCollectionContents(const QString &collectionName)
+void MainWindow::addNewCollectionNameToComboBoxCryptoList(const QString &collectionName)
 {
     ui->comboBoxCryptoList->addItem(QIcon(":/ico/collection.ico"), collectionName);
-    for (int index{}; index < collectionManagerDialog->getUi()->listWidgetTrackedCoins->count(); index++)
+    ui->comboBoxCryptoList->setCurrentIndex(ui->comboBoxCryptoList->count() - 1);
+}
+
+void MainWindow::loadCollectionContents(const QString &collectionName)
+{
+
+    ui->listWidgetTrackedCoins->clear();
+    /*for (int index{}; index < collectionManagerDialog->getUi()->listWidgetTrackedCoins->count(); index++)
     {
         QListWidgetItem* item{new QListWidgetItem(collectionManagerDialog->getUi()->listWidgetTrackedCoins->item(index)->icon(), collectionManagerDialog->getUi()->listWidgetTrackedCoins->item(index)->text())};
         ui->listWidgetTrackedCoins->addItem(item);
         //ui->listWidgetTrackedCoins->addItem("FERER");
         qDebug() << index;
+    }*/
+    if (dataStation->getRefObservers().contains(collectionName))
+    {
+        DataObserverPtr currentCollection{dataStation->getObservers().value(collectionName)};
+        QHash<QString, CoinPtr> trackedCoins{currentCollection->getTrackedCoins()};
+        QHashIterator<QString, CoinPtr> trackedCoinsIter{trackedCoins};
+        while(trackedCoinsIter.hasNext())
+        {
+            trackedCoinsIter.next();
+            QListWidgetItem* item{new QListWidgetItem(trackedCoinsIter.value()->getDisplayItem()->icon(), trackedCoinsIter.value()->getDisplayItem()->text())};
+            ui->listWidgetTrackedCoins->addItem(item);
+        }
     }
     ui->listWidgetTrackedCoins->show();
 }
