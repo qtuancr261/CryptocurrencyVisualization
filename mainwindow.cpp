@@ -5,9 +5,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     dataStation{new CoinDataStation(this)},
-    collectionManagerDialog{new CollectionCoinManagementDialog(this)}
+    collectionManagerDialog{new CollectionCoinManagementDialog(this)},
+    chartView{new QChartView(this)},
+    chart(new QChart())
 {
     ui->setupUi(this);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    setCentralWidget(chartView);
     //------------------------------------------------------
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), collectionManagerDialog, SLOT(showAddNewCollectionCoin()));
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), this , SLOT(disableAllToolButtonRelativeWithCollectionList()));
@@ -24,11 +28,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::requestToCreateANewCollectionWith, dataStation, &CoinDataStation::createANewCollectionWith);
     QObject::connect(dataStation, &CoinDataStation::creatingANewCollectionCompleted, this, &MainWindow::addNewCollectionNameToComboBoxCryptoList);
     QObject::connect(ui->comboBoxCryptoList, &QComboBox::currentTextChanged, this, &MainWindow::loadCollectionContents);
+    QObject::connect(ui->buttonShowBarChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingBarChart);
+    QObject::connect(ui->buttonShowLineChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingLineChart);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+QChartView *MainWindow::getChartView() const
+{
+    return chartView;
 }
 
 void MainWindow::disableAllToolButtonRelativeWithCollectionList()
@@ -75,4 +86,62 @@ void MainWindow::loadCollectionContents(const QString &collectionName)
         }
     }
     ui->listWidgetTrackedCoins->show();
+}
+
+void MainWindow::drawTrackingBarChart()
+{
+    QBarSeries* series{new QBarSeries()};
+    //series->append(btcSet);
+    //series->append(ethSet);
+    //series->append(nycSet);
+    //series->append(bsdSet);
+    //series->append(qtumSet);
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setTitleText("USD");
+    axisY->setLabelFormat("%.2f");
+    axisY->setMinorTickCount(10);
+    axisY->setTickCount(10);
+    axisY->setTickCount(series->count());
+
+    QDateTime time{QDateTime::currentDateTime()};
+    //axis->setRange("01/04/2018", "03/04/2018");
+    if (dataStation->getRefObservers().contains(ui->comboBoxCryptoList->currentText()))
+    {
+        DataObserverPtr currentCollection{dataStation->getObservers().value(ui->comboBoxCryptoList->currentText())};
+        QHash<QString, CoinPtr> trackedCoins{currentCollection->getTrackedCoins()};
+        QHashIterator<QString, CoinPtr> trackedCoinsIter{trackedCoins};
+        while(trackedCoinsIter.hasNext())
+        {
+            trackedCoinsIter.next();
+            //QListWidgetItem* item{new QListWidgetItem(trackedCoinsIter.value()->getDisplayItem()->icon(), trackedCoinsIter.value()->getDisplayItem()->text())};
+            QBarSet* valueSet{new QBarSet(trackedCoinsIter.value()->getSymbol())};
+            valueSet->append(trackedCoinsIter.value()->getLastValue().volume_24h);
+            series->append(valueSet);
+        }
+    }
+    QStringList dateCategories;
+    dateCategories << time.toString("dd/MM/yyyy");
+    QBarCategoryAxis* axis{new QBarCategoryAxis};
+    axis->append(dateCategories);
+    axis->setTitleText("Date");
+    //chart->createDefaultAxes();
+    chart->removeAllSeries();
+    chart->removeAxis(chart->axisX());
+    chart->removeAxis(chart->axisY());
+    chart->addSeries(series);
+    chart->setTitle("Cryptocurrency Track Bar Chart");
+    chart->setAnimationOptions(QChart::SeriesAnimations | QChart::GridAxisAnimations);
+    chart->setTheme(QChart::ChartThemeLight);
+    chart->setAxisX(axis, series);
+    chart->setAxisY(axisY, series);
+    chart->legend()->setAlignment(Qt::AlignRight);
+    chartView->setChart(chart);
+}
+
+void MainWindow::drawTrackingLineChart()
+{
+    chart->removeAllSeries();
+    chart->removeAxis(chart->axisX());
+    chart->removeAxis(chart->axisY());
 }
