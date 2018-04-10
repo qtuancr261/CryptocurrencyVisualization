@@ -14,6 +14,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QSignalMapper>
 using DataObserverPtr = shared_ptr<DataObserver>;
 using CoinCollectionPtr = shared_ptr<CoinCollection>;
 class CoinDataStation : public QObject, public DataPublisher
@@ -23,16 +24,23 @@ private:
     QHash<QString, CoinPtr> trackedCoins;
     QHash<QString, DataObserverPtr> observers;
     QNetworkAccessManager* networkManager;
+    QHash<QString, QNetworkReply*> repliesHashTable;
+    QSignalMapper* repliesMapper;
+    int replyCount;
     CryWSAPI API;
 public:
     explicit CoinDataStation(QObject *parent = nullptr);
 
 signals:
-    void parseLastValueOfAllCoinsCompleted(const QHash<QString, CoinPtr>& availableCoins);
+    void parseLastValueOfAllCoinsCompleted(const QHash<QString, CoinPtr>& trackedCoins);
+    void parseMaxValueIn7DaysOfAllCoinsCompleted(const QHash<QString, CoinPtr>& trackedCoins);
     void creatingANewCollectionCompleted(const QString& collectionName);
 public slots:
     void getLastValueOfAllCoins();
-    void gotLastValueOfALLCoins(QNetworkReply* replyFromServer);
+    void parseLastValueOfALLCoins(QNetworkReply* replyFromServer);
+    void getMaxValueIn7DaysOfAllCoins();
+    void parseMaxValueIn7DaysOfAllCoins(QNetworkReply* replyFromServer);
+    void replyFromServerArrived(const QString &replyDiscription);
     void createANewCollectionWith(const QString& collectionName, const QStringList& contents);
     // DataPublisher interface
 public:
