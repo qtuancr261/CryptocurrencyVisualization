@@ -1,20 +1,20 @@
 #include "crywsapi.h"
 
-QString CryWSAPI::getGetDataInSevenDays() const
+QUrl CryWSAPI::getMaxValueIn7DaysOfAllCoinsURL() const
 {
-    return hostname + apiCoins + getDataInSevenDays;
+    return QUrl(hostname + apiCoins + getMaxValueIn7DaysOfAllCoins);
 }
 
-QString CryWSAPI::getGetDataWithoutAllValues() const
+QUrl CryWSAPI::getLastValueOfAllCoinsUrl() const
 {
-    return hostname + apiCoins + getDataWithoutAllValues;
+    return QUrl(hostname + apiCoins + getLastValueOfAllCoins);
 }
 
 CryWSAPI::CryWSAPI()
     : hostname{"https://cryws.herokuapp.com"},
       apiCoins{"/api/coins"},
-      getDataInSevenDays{"/"},
-      getDataWithoutAllValues{"/nonchart"},
+      getMaxValueIn7DaysOfAllCoins{"/"},
+      getLastValueOfAllCoins{"/nonchart"},
       getSpecificCoinDataWithoutAllValues{"/nonchart/%1"}
 
 {

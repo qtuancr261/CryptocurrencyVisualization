@@ -8,14 +8,14 @@ class CryWSAPI
 private:
     QString hostname;
     QString apiCoins;
-    QString getDataInSevenDays;
-    QString getDataWithoutAllValues;
+    QString getMaxValueIn7DaysOfAllCoins;
+    QString getLastValueOfAllCoins;
     QString getSpecificCoinDataWithoutAllValues;
     QString apiAccount;
 public:
     CryWSAPI();
-    QString getGetDataInSevenDays() const;
-    QString getGetDataWithoutAllValues() const;
+    QUrl getMaxValueIn7DaysOfAllCoinsURL() const;
+    QUrl getLastValueOfAllCoinsUrl() const;
 };
 
 #endif // CRYWSAPI_H
