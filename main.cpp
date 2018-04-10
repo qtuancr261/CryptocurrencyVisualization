@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
     //![3]*/
-    QBarSet* btcSet{new QBarSet("BTC")};
+    /*QBarSet* btcSet{new QBarSet("BTC")};
     QBarSet* ethSet{new QBarSet("ETH")};
     QBarSet* nycSet{new QBarSet("NYC")};
     QBarSet* bsdSet{new QBarSet("BSD")};
@@ -91,14 +91,15 @@ int main(int argc, char *argv[])
 
 
     //![4]
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
+    //QChartView *chartView = new QChartView(chart);
+    //chartView->setRenderHint(QPainter::Antialiasing);
     //![4]
 
     //![5]
     //!
+    */
     w.setWindowTitle("Cryptocurrency Visualization");
-    w.setCentralWidget(chartView);
+    //w.getChartView()->setChart(chart);
     //w.resize(800, 600);
     //w.show();
     splashScreen.finish(&w);
