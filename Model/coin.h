@@ -22,7 +22,7 @@ private:
     {
         QDateTime timeStamp;
         double price;
-        ulong marketcap;
+        double marketcap;
         double volume_24h;
         QString changedPercent_1h;
         QString changedPercent_24h;
