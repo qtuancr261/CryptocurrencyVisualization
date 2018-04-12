@@ -30,6 +30,21 @@ void Coin::setLastValue(const value &value)
     lastValue = value;
 }
 
+const QVector<Coin::value> &Coin::getAllValues() const
+{
+    return allValues;
+}
+
+QVector<Coin::value> &Coin::getRefAllValues()
+{
+    return allValues;
+}
+
+void Coin::setAllValues(const QVector<value> &value)
+{
+    allValues = value;
+}
+
 Coin::Coin(QString name, QString symbol)
     : name{name},
       symbol{symbol},

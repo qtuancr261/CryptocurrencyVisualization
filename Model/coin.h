@@ -18,6 +18,8 @@ private:
     QString symbol;
     QListWidgetItemPtr displayItem;
     long available_supply;
+public:
+    explicit Coin(QString name, QString symbol);
     struct value
     {
         QDateTime timeStamp;
@@ -27,10 +29,6 @@ private:
         QString changedPercent_1h;
         QString changedPercent_24h;
     };
-    value lastValue;
-    QVector<value> allValues;
-public:
-    explicit Coin(QString name, QString symbol);
     QString getName() const;
     void setName(const QString &value);
     QString getSymbol() const;
@@ -43,6 +41,13 @@ public:
     QListWidgetItemPtr getDisplayItem() const;
     value& getLastValue();
     void setLastValue(const value &value);
+    const QVector<value>& getAllValues() const;
+    QVector<value>& getRefAllValues();
+
+    void setAllValues(const QVector<value> &value);
+private:
+    value lastValue;
+    QVector<value> allValues;
 };
 
 #endif // COIN_H
