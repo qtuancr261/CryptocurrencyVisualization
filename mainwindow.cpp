@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), this, SLOT(disableAllToolButtonRelativeWithCollectionList()));
     //QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), dataStation, SLOT(getLastValueOfAllCoins()));
     QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, collectionManagerDialog, &CollectionCoinManagementDialog::getAvailableCoins);
+    QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, dataStation, &CoinDataStation::getMaxValueIn7DaysOfAllCoins);
+
     QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::finishedPreloadAvailableCoins,  this, &MainWindow::show);
     QObject::connect(collectionManagerDialog, SIGNAL(finishedCurrentAction()), this, SLOT(enableAllToolButtonRelativeWithCollectionList()));
 
@@ -30,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->comboBoxCryptoList, &QComboBox::currentTextChanged, this, &MainWindow::loadCollectionContents);
     QObject::connect(ui->buttonShowBarChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingBarChart);
     QObject::connect(ui->buttonShowLineChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingLineChart);
+    QObject::connect(ui->sliderPeriod, &QSlider::valueChanged, this, &MainWindow::updateChartProperties);
 }
 
 MainWindow::~MainWindow()
@@ -88,6 +91,12 @@ void MainWindow::loadCollectionContents(const QString &collectionName)
     ui->listWidgetTrackedCoins->show();
 }
 
+void MainWindow::updateChartProperties()
+{
+    if (ui->buttonShowBarChart->isChecked())
+        drawTrackingBarChart();
+}
+
 void MainWindow::drawTrackingBarChart()
 {
     QBarSeries* series{new QBarSeries()};
@@ -98,14 +107,13 @@ void MainWindow::drawTrackingBarChart()
     //series->append(qtumSet);
 
     QValueAxis *axisY = new QValueAxis();
-    axisY->setTitleText("USD");
     axisY->setLabelFormat("%.2f");
     axisY->setMinorTickCount(10);
     axisY->setTickCount(10);
     axisY->setTickCount(series->count());
 
     QDateTime time{QDateTime::currentDateTime()};
-    //axis->setRange("01/04/2018", "03/04/2018");
+
     if (dataStation->getRefObservers().contains(ui->comboBoxCryptoList->currentText()))
     {
         DataObserverPtr currentCollection{dataStation->getObservers().value(ui->comboBoxCryptoList->currentText())};
@@ -116,26 +124,65 @@ void MainWindow::drawTrackingBarChart()
             trackedCoinsIter.next();
             //QListWidgetItem* item{new QListWidgetItem(trackedCoinsIter.value()->getDisplayItem()->icon(), trackedCoinsIter.value()->getDisplayItem()->text())};
             QBarSet* valueSet{new QBarSet(trackedCoinsIter.value()->getSymbol())};
-            valueSet->append(trackedCoinsIter.value()->getLastValue().volume_24h);
+            QVectorIterator<Coin::value> valueIter{trackedCoinsIter.value()->getRefAllValues()};
+            //valueSet->append(trackedCoinsIter.value()->getLastValue().volume_24h);
+            valueIter.toBack();
+            while(valueIter.hasPrevious())
+            {
+                if (ui->radioButtonMarketcap->isChecked())
+                {
+                    valueSet->append(valueIter.previous().marketcap);
+                    axisY->setTitleText("$");
+                }
+                else if (ui->radioButtonAvailableSupply->isChecked())
+                {
+                    valueSet->append(trackedCoinsIter.value()->getAvailable_supply());
+                    axisY->setTitleText("Supply");
+                }
+                else if (ui->radioButtonPrice->isChecked())
+                {
+                    valueSet->append(valueIter.previous().price);
+                    axisY->setTitleText("$");
+                }
+                else if (ui->radioButtonVolume->isChecked())
+                {
+                    valueSet->append(valueIter.previous().volume_24h);
+                    axisY->setTitleText("$");
+                }
+                else if (ui->radioButtonChange->isChecked())
+                {
+                    valueSet->append(valueIter.previous().changedPercent_24h.toDouble());
+                    axisY->setTitleText("%");
+                }
+            }
             series->append(valueSet);
         }
     }
     QStringList dateCategories;
-    dateCategories << time.toString("dd/MM/yyyy");
-    QBarCategoryAxis* axis{new QBarCategoryAxis};
-    axis->append(dateCategories);
-    axis->setTitleText("Date");
-    //chart->createDefaultAxes();
+    /*dateCategories << time.toString("dd/MM/yyyy") << time.addDays(-1).toString("dd/MM/yyyy") << time.addDays(-2).toString("dd/MM/yyyy")
+                   << time.addDays(-3).toString("dd/MM/yyyy") << time.addDays(-4).toString("dd/MM/yyyy") << time.addDays(-5).toString("dd/MM/yyyy")
+                   << time.addDays(-6).toString("dd/MM/yyyy") << time.addDays(-7).toString("dd/MM/yyyy");*/
+    for (int index{ui->sliderPeriod->value()}; index >= 0; index--)
+    {
+        dateCategories.append(time.addDays(-index).toString("dd/MM/yyyy"));
+    }
+    QBarCategoryAxis* axisX{new QBarCategoryAxis};
+    axisX->append(dateCategories);
+    axisX->setTitleText("Date");
+
+
     chart->removeAllSeries();
     chart->removeAxis(chart->axisX());
     chart->removeAxis(chart->axisY());
     chart->addSeries(series);
+    //chart->createDefaultAxes();
     chart->setTitle("Cryptocurrency Track Bar Chart");
     chart->setAnimationOptions(QChart::SeriesAnimations | QChart::GridAxisAnimations);
     chart->setTheme(QChart::ChartThemeLight);
-    chart->setAxisX(axis, series);
+    chart->setAxisX(axisX, series);
     chart->setAxisY(axisY, series);
-    chart->legend()->setAlignment(Qt::AlignRight);
+    //chart->axisY()->max;
+    chart->legend()->setAlignment(Qt::AlignTop);
     chartView->setChart(chart);
 }
 

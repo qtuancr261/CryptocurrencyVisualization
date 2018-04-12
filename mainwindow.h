@@ -8,6 +8,7 @@
 #include <QChartView>
 #include <QBarSet>
 #include <QBarCategoryAxis>
+#include <QValueAxis>
 namespace Ui {
 class MainWindow;
 }
@@ -33,6 +34,7 @@ public slots:
     void enableAllToolButtonRelativeWithCollectionList();
     void addNewCollectionNameToComboBoxCryptoList(const QString& collectionName);
     void loadCollectionContents(const QString& collectionName);
+    void updateChartProperties();
     void drawTrackingBarChart();
     void drawTrackingLineChart();
 };
