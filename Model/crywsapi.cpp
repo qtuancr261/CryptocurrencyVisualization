@@ -13,7 +13,7 @@ QUrl CryWSAPI::getLastValueOfAllCoinsUrl() const
 CryWSAPI::CryWSAPI()
     : hostname{"https://cryws.herokuapp.com"},
       apiCoins{"/api/coins"},
-      getMaxValueIn7DaysOfAllCoins{"/"},
+      getMaxValueIn7DaysOfAllCoins{"/chart7days"},
       getLastValueOfAllCoins{"/nonchart"},
       getSpecificCoinDataWithoutAllValues{"/nonchart/%1"}
 
