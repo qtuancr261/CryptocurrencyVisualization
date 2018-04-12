@@ -174,13 +174,23 @@
         <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="title">
-           <string>Tracked Period</string>
+           <string>Tracked Period (Day)</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QSlider" name="horizontalSliderPeriod">
+            <widget class="QSlider" name="sliderPeriod">
+             <property name="maximum">
+              <number>7</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBoxPeriod">
+             <property name="maximum">
+              <number>7</number>
              </property>
             </widget>
            </item>
@@ -356,5 +366,38 @@
  <resources>
   <include location="qresource.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>sliderPeriod</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxPeriod</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>164</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxPeriod</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderPeriod</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>83</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
