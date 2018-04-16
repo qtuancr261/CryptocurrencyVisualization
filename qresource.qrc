@@ -11,5 +11,6 @@
         <file>ico/coin.png</file>
         <file>ico/splashScreen.jpg</file>
         <file>ico/collection.ico</file>
+        <file>ico/coin_128.png</file>
     </qresource>
 </RCC>
