@@ -50,10 +50,11 @@ void CoinDataStation::parseLastValueOfALLCoins(QNetworkReply *replyFromServer)
         // Get the value we want from the key we provide
         QString symbol{currentObj.value("symbol").toString()};
         QString name{currentObj.value("name").toString()};
-        long availableSupply{currentObj.value("available_supply").toString().toLong()};
+        long availableSupply{static_cast<long>(currentObj.value("available_supply").toString().toDouble())};
 
         //qDebug() << currentValue.value("price").toDouble() << currentValue.value("timeStamp").toDouble();
         CoinPtr currentCoin{make_shared<Coin>(name, symbol)};
+        qDebug() << "avaiale supply" << availableSupply;
         currentCoin->setAvailable_supply(availableSupply);
         currentCoin->getLastValue().timeStamp.setTime_t(lastValue.value("timeStamp").toInt());
         currentCoin->getLastValue().price = lastValue.value("price").toDouble();
