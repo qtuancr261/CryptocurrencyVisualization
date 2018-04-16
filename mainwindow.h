@@ -36,7 +36,8 @@ public slots:
     void loadCollectionContents(const QString& collectionName);
     void updateChartProperties();
     void drawTrackingBarChart();
-    void drawTrackingLineChart();
+    void drawTrackingPieChart();
+    void loadCurrentSelectedTrackedCoin(const QString& currentCoinSymbol);
 };
 
 #endif // MAINWINDOW_H
