@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->buttonShowPieChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingPieChart);
     QObject::connect(ui->sliderPeriod, &QSlider::valueChanged, this, &MainWindow::updateChartProperties);
     QObject::connect(ui->listWidgetTrackedCoins, &QListWidget::currentTextChanged, this, &MainWindow::loadCurrentSelectedTrackedCoin);
+    QObject::connect(ui->comboBoxChartTheme, SIGNAL(currentIndexChanged(int)), this, SLOT(updateChartTheme(int)));
 }
 
 MainWindow::~MainWindow()
@@ -116,68 +117,76 @@ void MainWindow::drawTrackingBarChart()
     axisY->setTickCount(series->count());
     //axisY->setLabelsAngle(45);
     QDateTime time{QDateTime::currentDateTime()};
-
+    int dayPeriod{ui->spinBoxPeriod->value()};
     if (dataStation->getRefObservers().contains(ui->comboBoxCryptoList->currentText()))
     {
         DataObserverPtr currentCollection{dataStation->getObservers().value(ui->comboBoxCryptoList->currentText())};
         QHash<QString, CoinPtr> trackedCoins{currentCollection->getTrackedCoins()};
         QHashIterator<QString, CoinPtr> trackedCoinsIter{trackedCoins};
+
         while(trackedCoinsIter.hasNext())
         {
             trackedCoinsIter.next();
-            //QListWidgetItem* item{new QListWidgetItem(trackedCoinsIter.value()->getDisplayItem()->icon(), trackedCoinsIter.value()->getDisplayItem()->text())};
             QBarSet* valueSet{new QBarSet(trackedCoinsIter.value()->getSymbol())};
-            QVectorIterator<Coin::value> valueIter{trackedCoinsIter.value()->getRefAllValues()};
-            //valueSet->append(trackedCoinsIter.value()->getLastValue().volume_24h);
-            if (ui->radioButtonAvailableSupply->isChecked())
-            {
-                valueSet->append(trackedCoinsIter.value()->getAvailable_supply());
-                //qDebug() << trackedCoinsIter.value()->getAvailable_supply();
-                axisY->setTitleText("Supply");
-            }
-            else
-            {
-                valueIter.toBack();
-                while(valueIter.hasPrevious())
-                {
-                    if (ui->radioButtonMarketcap->isChecked())
-                    {
-                        valueSet->append(valueIter.previous().marketcap);
-                        axisY->setTitleText("$");
-                    }
+            QVector<Coin::value> values{trackedCoinsIter.value()->getRefAllValues()};
 
-                    else if (ui->radioButtonPrice->isChecked())
-                    {
-                        valueSet->append(valueIter.previous().price);
-                        axisY->setTitleText("$");
-                    }
-                    else if (ui->radioButtonVolume->isChecked())
-                    {
-                        valueSet->append(valueIter.previous().volume_24h);
-                        axisY->setTitleText("$");
-                    }
-                    else if (ui->radioButtonChange->isChecked())
-                    {
-                        valueSet->append(valueIter.previous().changedPercent_24h.toDouble());
-                        axisY->setTitleText("%");
-                    }
+            // Previous values
+            for (int dayPre{dayPeriod - 1}; dayPre >= 0; dayPre--)
+            {
+                if (ui->radioButtonMarketcap->isChecked())
+                {
+                    valueSet->append(values.at(dayPre).marketcap);
+                }
+                else if (ui->radioButtonPrice->isChecked())
+                {
+                    valueSet->append(values.at(dayPre).price);
+                }
+                else if (ui->radioButtonVolume->isChecked())
+                {
+                    valueSet->append(values.at(dayPre).volume_24h);
+                }
+                else if (ui->radioButtonChange->isChecked())
+                {
+                    valueSet->append(values.at(dayPre).changedPercent_24h.toDouble());
                 }
             }
-
+            // Current value
+            if (ui->radioButtonMarketcap->isChecked())
+            {
+                valueSet->append(trackedCoinsIter.value()->getLastValue().marketcap);
+                axisY->setTitleText("$");
+            }
+            else if (ui->radioButtonPrice->isChecked())
+            {
+                valueSet->append(trackedCoinsIter.value()->getLastValue().price);
+                axisY->setTitleText("$");
+            }
+            else if (ui->radioButtonVolume->isChecked())
+            {
+                valueSet->append(trackedCoinsIter.value()->getLastValue().volume_24h);
+                axisY->setTitleText("$");
+            }
+            else if (ui->radioButtonChange->isChecked())
+            {
+                valueSet->append(trackedCoinsIter.value()->getLastValue().changedPercent_24h.toDouble());
+                axisY->setTitleText("%");
+            }
+            // Append all the value set to series
             series->append(valueSet);
         }
     }
+
+    // Set the categories for the value set
     QStringList dateCategories;
-    /*dateCategories << time.toString("dd/MM/yyyy") << time.addDays(-1).toString("dd/MM/yyyy") << time.addDays(-2).toString("dd/MM/yyyy")
-                   << time.addDays(-3).toString("dd/MM/yyyy") << time.addDays(-4).toString("dd/MM/yyyy") << time.addDays(-5).toString("dd/MM/yyyy")
-                   << time.addDays(-6).toString("dd/MM/yyyy") << time.addDays(-7).toString("dd/MM/yyyy");*/
-    for (int index{ui->sliderPeriod->value()}; index >= 0; index--)
+    for (int index{dayPeriod}; index >= 0; index--)
     {
         dateCategories.append(time.addDays(-index).toString("dd/MM/yyyy"));
     }
+
     QBarCategoryAxis* axisX{new QBarCategoryAxis};
     axisX->append(dateCategories);
     axisX->setTitleText("Date");
+    //axisX->setRange(time.addDays(-ui->sliderPeriod->value()).toString(), time.addDays(0).toString());
 
     chart->removeAllSeries();
     chart->removeAxis(chart->axisX());
@@ -196,6 +205,7 @@ void MainWindow::drawTrackingBarChart()
 
 void MainWindow::drawTrackingPieChart()
 {
+    chart->setTheme(QChart::ChartThemeQt);
     chart->removeAllSeries();
     chart->removeAxis(chart->axisX());
     chart->removeAxis(chart->axisY());
@@ -262,47 +272,29 @@ void MainWindow::drawTrackingPieChart()
         chart->addAxis(axisY, Qt::AlignLeft);
         coinSeries->attachAxis(axisY);
         chartView->setChart(chart);
-
-
-  }
-
-    /*QLineSeries *series = new QLineSeries();
-    series->setName("BTC");
-    *series << QPointF(10.0, 7000.0) << QPointF(12.0, 7325.0) << QPointF(13.0, 6808.0) << QPointF(14.0, 8200.0)
-            << QPointF(15.0, 4325.0) << QPointF(16.0, 1358.0);
-    QLineSeries *series_2 = new QLineSeries();
-
-    series_2->setName("ETH");
-    *series_2 << QPointF(10.0, 7520.0) << QPointF(12.0, 7025.0) << QPointF(13.0, 9808.0) << QPointF(14.0, 7853.09)
-            << QPointF(15.0, 4325.0) << QPointF(16.0, 4520.06);
-    //![1]
-
-    //![2]
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->addSeries(series_2);
-    //chart->legend()->hide();
-    chart->setTitle("Price Tracking Chart");
-    //![2]
-
-    //![3]
-    QValueAxis *axisX = new QValueAxis();
-    axisX->setTitleText("Time Stamp");
-    axisX->setLabelFormat("%i");
-    axisX->setTickCount(series->count());
-    chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
-
-    QValueAxis *axisY = new QValueAxis();
-    axisY->setTitleText("Price");
-    axisY->setLabelFormat("%i");
-    axisY->setTickCount(series->count());
-    chart->addAxis(axisY, Qt::AlignLeft);
-    series->attachAxis(axisY);*/
+    }
 
 }
 
 void MainWindow::loadCurrentSelectedTrackedCoin(const QString &currentCoinSymbol)
 {
-    ui->labelCoinName->setText(currentCoinSymbol);
+    QStringList infoList{currentCoinSymbol.split(" - ", QString::SplitBehavior::SkipEmptyParts)};
+    ui->labelCoinName->setText(infoList.at(1));
+    if (dataStation->getTrackedCoins().contains(infoList.at(0)))
+    {
+        // Get the coin is being selected by user
+        CoinPtr coinPtr{dataStation->getTrackedCoins().value(infoList.at(0))};
+        // get coin information and show it
+        ui->labelCoinAvailableSupply->setText(QString::number(coinPtr->getAvailable_supply()));
+        ui->labelCoinPrice->setText(QString::number(coinPtr->getLastValue().price, 'f'));
+        ui->labelCoinMarketCap->setText(QString::number(coinPtr->getLastValue().marketcap, 'f'));
+        ui->labelCoinVolume24h->setText(QString::number(coinPtr->getLastValue().volume_24h, 'f'));
+        ui->labelChange1h->setText(coinPtr->getLastValue().changedPercent_1h);
+        ui->labelChange24h->setText(coinPtr->getLastValue().changedPercent_24h);
+    }
+}
+
+void MainWindow::updateChartTheme(int themeID)
+{
+    chart->setTheme(static_cast<QChart::ChartTheme>(themeID));
 }
