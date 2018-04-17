@@ -42,6 +42,7 @@ void CoinDataStation::parseLastValueOfALLCoins(QNetworkReply *replyFromServer)
     if (replyFromServer->error())
     {
         qDebug() << "Server Error: " << replyFromServer->errorString();
+        emit parseLastValueOfAllCoinsCompleted(trackedCoins);
         return;
     }
     QString jsonString{replyFromServer->readAll()};
@@ -91,6 +92,7 @@ void CoinDataStation::parseMaxValueIn7DaysOfAllCoins(QNetworkReply *replyFromSer
     if (replyFromServer->error())
     {
         qDebug() << "Server Error: " << replyFromServer->errorString();
+        emit parseMaxValueIn7DaysOfAllCoinsCompleted(trackedCoins);
         return;
     }
     QString jsonString{replyFromServer->readAll()};
@@ -158,7 +160,7 @@ void CoinDataStation::registerObserver(const DataObserverPtr &observer)
 
 void CoinDataStation::removeObserver(const DataObserverPtr &observer)
 {
-
+    observers.remove(observer->getName());
 }
 
 void CoinDataStation::notifyAllObservers()
