@@ -75,7 +75,7 @@
        <property name="title">
         <string>How do we visualize data ?</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <layout class="QVBoxLayout" name="verticalLayout_9">
         <item>
          <widget class="QCommandLinkButton" name="buttonShowBarChart">
           <property name="font">
@@ -186,6 +186,59 @@
          </widget>
         </item>
         <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Chart Theme</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QComboBox" name="comboBoxChartTheme">
+             <item>
+              <property name="text">
+               <string>Light</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Blue Cerulean</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Dark</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BrownSand</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BlueNcs</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>High Constrast</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Blue Icy</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Qt</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -193,7 +246,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>73</height>
+            <height>213</height>
            </size>
           </property>
          </spacer>
@@ -405,7 +458,7 @@
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="text">
-                  <string>5000</string>
+                  <string>&lt;3</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -436,12 +489,12 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="labelCoinAvailableSupplu">
+                <widget class="QLabel" name="labelCoinAvailableSupply">
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="text">
-                  <string>125425436</string>
+                  <string>&lt;3</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -477,7 +530,7 @@
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="text">
-                  <string>1547896321</string>
+                  <string>&lt;3</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -513,7 +566,7 @@
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="text">
-                  <string>523654789</string>
+                  <string>&lt;3</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -559,7 +612,7 @@
              <item row="0" column="1">
               <widget class="QLabel" name="labelChange1h">
                <property name="text">
-                <string>TextLabel</string>
+                <string>&lt;3</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -586,9 +639,9 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QLabel" name="label_Change24h">
+              <widget class="QLabel" name="labelChange24h">
                <property name="text">
-                <string>TextLabel</string>
+                <string>&lt;3</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
