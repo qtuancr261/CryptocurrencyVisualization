@@ -51,13 +51,16 @@ void CollectionCoinManagementDialog::showAddNewCollectionCoin()
     dialogMode = Mode::AddNewCollectionMode;
 }
 
-void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin()
+void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin(const CoinDataStation& coinDataStation, const DataObserver& coinCollection)
 {
     this->setWindowTitle("Configure collection");
     this->setWindowIcon(QIcon(":/ico/collectionSetting.ico"));
+    ui->lineEditCollectionName->setText(coinCollection.getName());
+    loadAvailableCoinsAndTrackedCoins(coinDataStation, coinCollection);
     this->show();
     this->raise();
     dialogMode = Mode::ConfigureCurrentCollectionMode;
+
 }
 
 void CollectionCoinManagementDialog::getAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
@@ -74,20 +77,33 @@ void CollectionCoinManagementDialog::getAvailableCoins(const QHash<QString, Coin
     //showAddNewCollectionCoin();
 }
 
-void CollectionCoinManagementDialog::loadAvailableCoinsAndTrackedCoins(const CoinDataStation &coinDataStation, const CoinCollection &coinCollection)
+void CollectionCoinManagementDialog::loadAvailableCoinsAndTrackedCoins(const CoinDataStation &coinDataStation, const DataObserver &coinCollection)
 {
     QHash<QString, CoinPtr> availableCoinsFromServer{coinDataStation.getTrackedCoins()};
     QHash<QString, CoinPtr> trackedCoinFromCurrentCollection{coinCollection.getTrackedCoins()};
+    qDebug() << "Collection Coin size: " << trackedCoinFromCurrentCollection.size();
     // Removed old Items
+    while (ui->listWidgetAvailableCoins->count() > 0)
+    {
+        ui->listWidgetAvailableCoins->takeItem(0);
+    }
+    while (ui->listWidgetTrackedCoins->count() > 0)
+    {
+        ui->listWidgetTrackedCoins->takeItem(0);
+    }
     // Let's put all Coins in the right position
     QHashIterator<QString, CoinPtr> iterQHash{availableCoinsFromServer};
     while(iterQHash.hasNext())
     {
         iterQHash.next();
         if (trackedCoinFromCurrentCollection.contains(iterQHash.key()))
-            ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
-        else
             ui->listWidgetTrackedCoins->addItem(iterQHash.value()->getDisplayItem().get());
+            //ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
+            //qDebug() << "cointain";
+        else
+            ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
+            //ui->listWidgetTrackedCoins->addItem(iterQHash.value()->getDisplayItem().get());
+            //qDebug() << " - ";
     }
 
 }

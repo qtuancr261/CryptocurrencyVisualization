@@ -25,9 +25,9 @@ public:
 
 public slots:
     void showAddNewCollectionCoin();
-    void showConfigureCurrentCollectionCoin();
+    void showConfigureCurrentCollectionCoin(const CoinDataStation& coinDataStation, const DataObserver& coinCollection);
     void getAvailableCoins(const QHash<QString, CoinPtr>& availableCoins);
-    void loadAvailableCoinsAndTrackedCoins(const CoinDataStation& coinDataStation, const CoinCollection& coinCollection);
+    void loadAvailableCoinsAndTrackedCoins(const CoinDataStation& coinDataStation, const DataObserver& coinCollection);
     void moveSelectedCoinsToTrackedCoins();
     void moveSelectedCoinsToAvailableCoins();
     void moveAllCoinsToTrackedCoins();
