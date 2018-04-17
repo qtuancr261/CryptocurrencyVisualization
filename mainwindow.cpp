@@ -11,12 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->chart()->setAnimationOptions(QChart::AllAnimations);
+    chart->setAnimationOptions(QChart::AllAnimations);
+    //setupAutoCompleterForComboBoxCrytoList();
     setCentralWidget(chartView);
     //------------------------------------------------------
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), collectionManagerDialog, SLOT(showAddNewCollectionCoin()));
     QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), this , SLOT(disableAllToolButtonRelativeWithCollectionList()));
 
-    QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), collectionManagerDialog, SLOT(showConfigureCurrentCollectionCoin()));
+    QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), this, SLOT(checkCollectionContentsBeforeConfiguringIt()));
     QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), this, SLOT(disableAllToolButtonRelativeWithCollectionList()));
     //QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), dataStation, SLOT(getLastValueOfAllCoins()));
     QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, collectionManagerDialog, &CollectionCoinManagementDialog::getAvailableCoins);
@@ -32,9 +35,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->comboBoxCryptoList, &QComboBox::currentTextChanged, this, &MainWindow::loadCollectionContents);
     QObject::connect(ui->buttonShowBarChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingBarChart);
     QObject::connect(ui->buttonShowPieChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingPieChart);
-    QObject::connect(ui->sliderPeriod, &QSlider::valueChanged, this, &MainWindow::updateChartProperties);
+    QObject::connect(ui->sliderPeriod, &QSlider::valueChanged, this, &MainWindow::updateChartPeriodProperties);
     QObject::connect(ui->listWidgetTrackedCoins, &QListWidget::currentTextChanged, this, &MainWindow::loadCurrentSelectedTrackedCoin);
+    QObject::connect(ui->listWidgetTrackedCoins, &QListWidget::currentTextChanged, this, &MainWindow::updatePieChartSlice);
     QObject::connect(ui->comboBoxChartTheme, SIGNAL(currentIndexChanged(int)), this, SLOT(updateChartTheme(int)));
+    QObject::connect(ui->toolButtonRemoveList, &QToolButton::clicked, this, &MainWindow::confirmDeletingACollection);
+    QObject::connect(ui->lineEditFilter, &QLineEdit::returnPressed, this, &MainWindow::changeSelectedCoinWhenUserSearchItOnLineEditFiler);
+    QObject::connect(ui->radioButtonChange, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
+    QObject::connect(ui->radioButtonMarketcap, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
+    QObject::connect(ui->radioButtonPrice, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
+    QObject::connect(ui->radioButtonVolume, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
 }
 
 MainWindow::~MainWindow()
@@ -45,6 +55,26 @@ MainWindow::~MainWindow()
 QChartView *MainWindow::getChartView() const
 {
     return chartView;
+}
+
+void MainWindow::setupAutoCompleterForComboBoxCrytoList()
+{
+    QStringList wordCoinList{};
+    for (int rowIndex{}; rowIndex < ui->listWidgetTrackedCoins->count(); rowIndex++)
+    {
+        wordCoinList.append(ui->listWidgetTrackedCoins->item(rowIndex)->text());
+    }
+    QCompleter *completer = new QCompleter(wordCoinList, this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    ui->lineEditFilter->setCompleter(completer);
+}
+
+void MainWindow::changeSelectedCoinWhenUserSearchItOnLineEditFiler()
+{
+    QString searchCoin{ui->lineEditFilter->text()};
+    QList<QListWidgetItem*> matchItems{ui->listWidgetTrackedCoins->findItems(searchCoin, Qt::MatchFlag::MatchExactly)};
+    if (matchItems.size() > 0)
+        ui->listWidgetTrackedCoins->setCurrentItem(matchItems.at(0));
 }
 
 void MainWindow::disableAllToolButtonRelativeWithCollectionList()
@@ -91,12 +121,29 @@ void MainWindow::loadCollectionContents(const QString &collectionName)
         }
     }
     ui->listWidgetTrackedCoins->show();
+    setupAutoCompleterForComboBoxCrytoList();
 }
 
-void MainWindow::updateChartProperties()
+void MainWindow::updateChartPeriodProperties()
 {
     if (ui->buttonShowBarChart->isChecked())
         drawTrackingBarChart();
+    else if (ui->buttonShowPieChart->isChecked())
+        return;
+}
+
+void MainWindow::updateChartTrackedValue()
+{
+    if (ui->buttonShowBarChart->isChecked())
+        drawTrackingBarChart();
+    else if (ui->buttonShowPieChart->isChecked())
+        return;
+}
+
+void MainWindow::updatePieChartSlice()
+{
+    if (ui->buttonShowBarChart->isChecked())
+        return;
     else if (ui->buttonShowPieChart->isChecked())
         drawTrackingPieChart();
 }
@@ -104,11 +151,6 @@ void MainWindow::updateChartProperties()
 void MainWindow::drawTrackingBarChart()
 {
     QBarSeries* series{new QBarSeries()};
-    //series->append(btcSet);
-    //series->append(ethSet);
-    //series->append(nycSet);
-    //series->append(bsdSet);
-    //series->append(qtumSet);
 
     QValueAxis *axisY = new QValueAxis();
     axisY->setLabelFormat("%.2f");
@@ -133,6 +175,8 @@ void MainWindow::drawTrackingBarChart()
             // Previous values
             for (int dayPre{dayPeriod - 1}; dayPre >= 0; dayPre--)
             {
+                if (dayPre >= values.size())
+                    continue;
                 if (ui->radioButtonMarketcap->isChecked())
                 {
                     valueSet->append(values.at(dayPre).marketcap);
@@ -194,96 +238,83 @@ void MainWindow::drawTrackingBarChart()
     chart->addSeries(series);
     //chart->createDefaultAxes();
     chart->setTitle("Cryptocurrency Track Bar Chart");
-    chart->setAnimationOptions(QChart::SeriesAnimations | QChart::GridAxisAnimations);
-    chart->setTheme(QChart::ChartThemeDark);
     chart->setAxisX(axisX, series);
     chart->setAxisY(axisY, series);
     //chart->axisY()->max;
     chart->legend()->setAlignment(Qt::AlignTop);
     chartView->setChart(chart);
 }
-
+// Pie chart for Available supply only
 void MainWindow::drawTrackingPieChart()
 {
-    chart->setTheme(QChart::ChartThemeQt);
-    chart->removeAllSeries();
-    chart->removeAxis(chart->axisX());
-    chart->removeAxis(chart->axisY());
-    // check if current collection
-    if (dataStation->getRefObservers().contains(ui->comboBoxCryptoList->currentText()))
+    chartView->chart()->removeAllSeries();
+    chartView->chart()->removeAxis(chart->axisX());
+    chartView->chart()->removeAxis(chart->axisY());
+
+    QString collectionName{ui->comboBoxCryptoList->currentText()};
+    int currentSelectedCoinRow{ui->listWidgetTrackedCoins->currentRow()};
+    QStringList selectedCoinInfo;
+    if (currentSelectedCoinRow != -1)
+        selectedCoinInfo = ui->listWidgetTrackedCoins->item(currentSelectedCoinRow)->text().split(" - ", QString::SplitBehavior::SkipEmptyParts);
+    // Initialize pie properties
+    long totalAvailableSupplies{};
+    QPieSeries* series{new QPieSeries()};
+    series->setHoleSize(0.4);
+
+    // Initialize value for our pie series
+    if (dataStation->getObservers().contains(collectionName))
     {
-        DataObserverPtr currentCollection{dataStation->getObservers().value(ui->comboBoxCryptoList->currentText())};
+        // Get collection ptr from dataStation
+        DataObserverPtr currentCollection{dataStation->getObservers().value(collectionName)};
+        // Get collection's tracked coins
         QHash<QString, CoinPtr> trackedCoins{currentCollection->getTrackedCoins()};
         QHashIterator<QString, CoinPtr> trackedCoinsIter{trackedCoins};
-        QLineSeries* coinSeries{nullptr};
+        // let's iterate through all tracked coins and calculate the total available supplies
         while(trackedCoinsIter.hasNext())
         {
             trackedCoinsIter.next();
-            coinSeries = new QLineSeries();
-            coinSeries->setName(trackedCoinsIter.value()->getSymbol());
-            QVectorIterator<Coin::value> valueIter{trackedCoinsIter.value()->getRefAllValues()};
-            //valueSet->append(trackedCoinsIter.value()->getLastValue().volume_24h);
-            if (ui->radioButtonAvailableSupply->isChecked())
+            totalAvailableSupplies += trackedCoinsIter.value()->getAvailable_supply();
+        }
+        qDebug() << "Total supplies: " << totalAvailableSupplies;
+        while(trackedCoinsIter.hasPrevious())
+        {
+            trackedCoinsIter.previous();
+            double percentage{static_cast<double>(trackedCoinsIter.value()->getAvailable_supply()) / totalAvailableSupplies * 100.0};
+            QString percentageInString{ trackedCoinsIter.value()->getSymbol() +  ": " +  QString::number(percentage, 'f', 2) + "%"};
+            //qDebug() << QString::number(static_cast<double>(trackedCoinsIter.value()->getAvailable_supply()) / totalAvailableSupplies, 'f', 6);
+
+            if(currentSelectedCoinRow != -1 && trackedCoinsIter.value()->getSymbol() == selectedCoinInfo.at(0))
             {
-               break;
+                QPieSlice* slice =  series->append(percentageInString, percentage);
+                slice->setExploded();
+                slice->setLabelVisible();
             }
             else
             {
-                valueIter.toBack();
-                while(valueIter.hasPrevious())
-                {
-                    Coin::value currentValue{valueIter.previous()};
-                    if (ui->radioButtonMarketcap->isChecked())
-                    {
-                        coinSeries->append(currentValue.timeStamp.date().day() , currentValue.marketcap);
-
-                    }
-                    else if (ui->radioButtonPrice->isChecked())
-                    {
-                        //valueSet->append(valueIter.previous().price);
-                        //axisY->setTitleText("$");
-                    }
-                    else if (ui->radioButtonVolume->isChecked())
-                    {
-                        //valueSet->append(valueIter.previous().volume_24h);
-                        //axisY->setTitleText("$");
-                    }
-                    else if (ui->radioButtonChange->isChecked())
-                    {
-                        //valueSet->append(valueIter.previous().changedPercent_24h.toDouble());
-                        //axisY->setTitleText("%");
-                    }
-                }
-                chart->addSeries(coinSeries);
+                series->append(percentageInString, percentage);
             }
-        }
-        //chart->createDefaultAxes();
-        QValueAxis *axisX = new QValueAxis();
-        axisX->setTitleText("Time Stamp");
-        axisX->setLabelFormat("%i");
-        //axisX->setTickCount(coinSeries->count());
-        chart->addAxis(axisX, Qt::AlignBottom);
-        coinSeries->attachAxis(axisX);
 
-        QValueAxis *axisY = new QValueAxis();
-        axisY->setTitleText("Price");
-        axisY->setLabelFormat("%i");
-        //axisY->setTickCount(coinSeries->count());
-        chart->addAxis(axisY, Qt::AlignLeft);
-        coinSeries->attachAxis(axisY);
-        chartView->setChart(chart);
+        }
+
     }
 
+    chartView->chart()->addSeries(series);
+    chartView->chart()->setTitle("Available Supplies Percentage Chart");
 }
 
 void MainWindow::loadCurrentSelectedTrackedCoin(const QString &currentCoinSymbol)
 {
     QStringList infoList{currentCoinSymbol.split(" - ", QString::SplitBehavior::SkipEmptyParts)};
-    ui->labelCoinName->setText(infoList.at(1));
-    if (dataStation->getTrackedCoins().contains(infoList.at(0)))
+    if (infoList.size() == 0)
+        return;
+    QString coinSymbol{infoList.at(0)};
+    //qDebug() << "infolist size: " << infoList.size();
+    ui->labelCoinName->setText(infoList.at(0));
+    ui->labelCoinIcon->setPixmap(QPixmap(QString("color/%1.png").arg(coinSymbol)));
+    if (dataStation->getTrackedCoins().contains(coinSymbol))
     {
         // Get the coin is being selected by user
-        CoinPtr coinPtr{dataStation->getTrackedCoins().value(infoList.at(0))};
+        CoinPtr coinPtr{dataStation->getTrackedCoins().value(coinSymbol)};
         // get coin information and show it
         ui->labelCoinAvailableSupply->setText(QString::number(coinPtr->getAvailable_supply()));
         ui->labelCoinPrice->setText(QString::number(coinPtr->getLastValue().price, 'f'));
@@ -296,5 +327,36 @@ void MainWindow::loadCurrentSelectedTrackedCoin(const QString &currentCoinSymbol
 
 void MainWindow::updateChartTheme(int themeID)
 {
-    chart->setTheme(static_cast<QChart::ChartTheme>(themeID));
+    chartView->chart()->setTheme(static_cast<QChart::ChartTheme>(themeID));
+}
+
+void MainWindow::checkCollectionContentsBeforeConfiguringIt()
+{
+    if (ui->comboBoxCryptoList->currentText() == "Choose your Collection")
+        QMessageBox::information(this, "Invalid Action", "Please select an existing collection for configuring");
+    else
+    {
+        DataObserverPtr collectionPtr{dataStation->getRefObservers().value(ui->comboBoxCryptoList->currentText())};
+        collectionManagerDialog->showConfigureCurrentCollectionCoin(*dataStation, *collectionPtr.get());
+    }
+}
+
+void MainWindow::confirmDeletingACollection()
+{
+    QString collectionName{ui->comboBoxCryptoList->currentText()};
+    QMessageBox::StandardButton userAnsquer{QMessageBox::question(this,
+                                                                  "Confirm when delete an collection",
+                                                                  QString("Do you actually want to delete %1 collection ? ").arg(collectionName))};
+    if (userAnsquer == QMessageBox::StandardButton::Cancel)
+        return;
+    else
+    {
+        if (dataStation->getObservers().contains(collectionName))
+        {
+            // Remove from data station
+            dataStation->removeObserver(dataStation->getObservers().value(collectionName));
+            ui->comboBoxCryptoList->removeItem(ui->comboBoxCryptoList->currentIndex());
+        }
+    }
+
 }

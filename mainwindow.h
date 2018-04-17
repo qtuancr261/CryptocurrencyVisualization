@@ -8,6 +8,8 @@
 #include <QChartView>
 #include <QBarSet>
 #include <QBarCategoryAxis>
+#include <QPieSeries>
+#include <QPieSlice>
 #include <QValueAxis>
 #include <QComboBox>
 namespace Ui {
@@ -30,16 +32,22 @@ private:
     CollectionCoinManagementDialog* collectionManagerDialog;
     QChartView* chartView;
     QChart* chart;
+    void setupAutoCompleterForComboBoxCrytoList();
+    void changeSelectedCoinWhenUserSearchItOnLineEditFiler();
 public slots:
     void disableAllToolButtonRelativeWithCollectionList();
     void enableAllToolButtonRelativeWithCollectionList();
     void addNewCollectionNameToComboBoxCryptoList(const QString& collectionName);
     void loadCollectionContents(const QString& collectionName);
-    void updateChartProperties();
+    void updateChartPeriodProperties();
+    void updateChartTrackedValue();
+    void updatePieChartSlice();
     void drawTrackingBarChart();
     void drawTrackingPieChart();
     void loadCurrentSelectedTrackedCoin(const QString& currentCoinSymbol);
     void updateChartTheme(int themeID);
+    void checkCollectionContentsBeforeConfiguringIt();
+    void confirmDeletingACollection();
 };
 
 #endif // MAINWINDOW_H

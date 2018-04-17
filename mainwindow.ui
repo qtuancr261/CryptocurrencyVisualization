@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="qresource.qrc">
+    <normaloff>:/ico/linux_tux.ico</normaloff>:/ico/linux_tux.ico</iconset>
+  </property>
   <property name="documentMode">
    <bool>false</bool>
   </property>
@@ -75,41 +79,50 @@
        <property name="title">
         <string>How do we visualize data ?</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_9">
+       <layout class="QVBoxLayout" name="verticalLayout_10">
         <item>
-         <widget class="QCommandLinkButton" name="buttonShowBarChart">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-           </font>
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>Chart Type</string>
           </property>
-          <property name="text">
-           <string>Bar Chart</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="autoExclusive">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCommandLinkButton" name="buttonShowPieChart">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Pie Chart</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="autoExclusive">
-           <bool>true</bool>
-          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QCommandLinkButton" name="buttonShowBarChart">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Bar Chart</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCommandLinkButton" name="buttonShowPieChart">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Pie Chart</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -151,13 +164,6 @@
              </property>
              <property name="checked">
               <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButtonAvailableSupply">
-             <property name="text">
-              <string>Available Supply</string>
              </property>
             </widget>
            </item>
@@ -237,6 +243,22 @@
            </item>
           </layout>
          </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="qresource.qrc">:/ico/cryws.png</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateTimeEdit" name="dateTimeEdit"/>
         </item>
         <item>
          <spacer name="verticalSpacer">
@@ -406,6 +428,9 @@
                  </property>
                  <property name="pixmap">
                   <pixmap resource="qresource.qrc">:/ico/coin_128.png</pixmap>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>
