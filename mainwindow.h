@@ -9,6 +9,7 @@
 #include <QBarSet>
 #include <QBarCategoryAxis>
 #include <QValueAxis>
+#include <QComboBox>
 namespace Ui {
 class MainWindow;
 }
@@ -38,6 +39,7 @@ public slots:
     void drawTrackingBarChart();
     void drawTrackingPieChart();
     void loadCurrentSelectedTrackedCoin(const QString& currentCoinSymbol);
+    void updateChartTheme(int themeID);
 };
 
 #endif // MAINWINDOW_H
