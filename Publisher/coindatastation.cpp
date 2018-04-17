@@ -39,6 +39,11 @@ void CoinDataStation::getLastValueOfAllCoins()
 void CoinDataStation::parseLastValueOfALLCoins(QNetworkReply *replyFromServer)
 {
     //qDebug() << replyFromServer->readAll();
+    if (replyFromServer->error())
+    {
+        qDebug() << "Server Error: " << replyFromServer->errorString();
+        return;
+    }
     QString jsonString{replyFromServer->readAll()};
     QJsonDocument jsonDoc{QJsonDocument::fromJson(jsonString.toUtf8())};
     QJsonArray jsonArray(jsonDoc.array());
@@ -54,7 +59,7 @@ void CoinDataStation::parseLastValueOfALLCoins(QNetworkReply *replyFromServer)
 
         //qDebug() << currentValue.value("price").toDouble() << currentValue.value("timeStamp").toDouble();
         CoinPtr currentCoin{make_shared<Coin>(name, symbol)};
-        qDebug() << "avaiale supply" << availableSupply;
+        //qDebug() << "availale supply" << availableSupply;
         currentCoin->setAvailable_supply(availableSupply);
         currentCoin->getLastValue().timeStamp.setTime_t(lastValue.value("timeStamp").toInt());
         currentCoin->getLastValue().price = lastValue.value("price").toDouble();
@@ -67,6 +72,7 @@ void CoinDataStation::parseLastValueOfALLCoins(QNetworkReply *replyFromServer)
         //qDebug() << jsonArray.at(0).toArray().at(i).toObject().value("symbol").toString();
         //
     }
+    qDebug() << "emit parseLastValueOfAllCoinsCompleted";
     emit parseLastValueOfAllCoinsCompleted(trackedCoins);
 }
 
@@ -82,6 +88,11 @@ void CoinDataStation::getMaxValueIn7DaysOfAllCoins()
 void CoinDataStation::parseMaxValueIn7DaysOfAllCoins(QNetworkReply *replyFromServer)
 {
     qDebug() << "7Days";
+    if (replyFromServer->error())
+    {
+        qDebug() << "Server Error: " << replyFromServer->errorString();
+        return;
+    }
     QString jsonString{replyFromServer->readAll()};
     QJsonDocument jsonDoc{QJsonDocument::fromJson(jsonString.toUtf8())};
     QJsonArray jsonArray(jsonDoc.array());
@@ -94,6 +105,9 @@ void CoinDataStation::parseMaxValueIn7DaysOfAllCoins(QNetworkReply *replyFromSer
         {
             for (const QString& key : max7DaysValues.keys())
             {
+                if (key == "prev0")
+                    continue;
+                qDebug() << key;
                 QJsonObject dayValuesObject{max7DaysValues.value(key).toObject()};
                 Coin::value dayValues;
                 dayValues.timeStamp.setTime_t(dayValuesObject.value("timeStamp").toInt());
@@ -104,6 +118,7 @@ void CoinDataStation::parseMaxValueIn7DaysOfAllCoins(QNetworkReply *replyFromSer
                 dayValues.changedPercent_24h = dayValuesObject.value("change_24h").toString();
                 ptr->getRefAllValues().append(dayValues);
             }
+            // Update last Value
         }
     }
 
@@ -143,6 +158,7 @@ void CoinDataStation::registerObserver(const DataObserverPtr &observer)
 
 void CoinDataStation::removeObserver(const DataObserverPtr &observer)
 {
+
 }
 
 void CoinDataStation::notifyAllObservers()
