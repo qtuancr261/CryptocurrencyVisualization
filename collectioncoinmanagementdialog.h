@@ -26,18 +26,19 @@ public:
 public slots:
     void showAddNewCollectionCoin();
     void showConfigureCurrentCollectionCoin(const CoinDataStation& coinDataStation, const DataObserver& coinCollection);
-    void getAvailableCoins(const QHash<QString, CoinPtr>& availableCoins);
+    void setAvailableCoins(const QHash<QString, CoinPtr>& availableCoins);
     void loadAvailableCoinsAndTrackedCoins(const CoinDataStation& coinDataStation, const DataObserver& coinCollection);
     void moveSelectedCoinsToTrackedCoins();
     void moveSelectedCoinsToAvailableCoins();
     void moveAllCoinsToTrackedCoins();
     void moveAllCoinsToAvailableCoins();
-    void checkNewCollectionContents();
+    void checkCollectionContents();
     //void configureCurrentCollectionContents();
 signals:
     void finishedCurrentAction();
     void finishedPreloadAvailableCoins();
-    void requestToCreateANewCollectionWith(const QString& colectionName,const QStringList& contents);
+    void requestToCreateANewCollectionWith(const QString& collectionName, const QStringList& contents);
+    void requestToModifyCurrentCollectionContents(const QString& collectionName, const QStringList& contents);
 private:
     Ui::CollectionCoinManagementDialog *ui;
     QHash<QString, CoinPtr> trackedCoins;
