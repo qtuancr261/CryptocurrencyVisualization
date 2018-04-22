@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), this, SLOT(checkCollectionContentsBeforeConfiguringIt()));
     QObject::connect(ui->toolButtonConfigList, SIGNAL(clicked(bool)), this, SLOT(disableAllToolButtonRelativeWithCollectionList()));
     //QObject::connect(ui->toolButtonAddNewList, SIGNAL(clicked(bool)), dataStation, SLOT(getLastValueOfAllCoins()));
-    QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, collectionManagerDialog, &CollectionCoinManagementDialog::getAvailableCoins);
+    QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, collectionManagerDialog, &CollectionCoinManagementDialog::setAvailableCoins);
     QObject::connect(dataStation, &CoinDataStation::parseLastValueOfAllCoinsCompleted, dataStation, &CoinDataStation::getMaxValueIn7DaysOfAllCoins);
 
     QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::finishedPreloadAvailableCoins,  this, &MainWindow::show);
@@ -30,8 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // First action
     dataStation->getLastValueOfAllCoins();
-    QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::requestToCreateANewCollectionWith, dataStation, &CoinDataStation::createANewCollectionWith);
+    QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::requestToCreateANewCollectionWith, dataStation, &CoinDataStation::createANewCollection);
+    QObject::connect(collectionManagerDialog, &CollectionCoinManagementDialog::requestToModifyCurrentCollectionContents, dataStation, &CoinDataStation::modifyCollectionContents);
     QObject::connect(dataStation, &CoinDataStation::creatingANewCollectionCompleted, this, &MainWindow::addNewCollectionNameToComboBoxCryptoList);
+    QObject::connect(dataStation, &CoinDataStation::modifyingCollectionContentsCompleted, this, &MainWindow::loadCollectionContents);
+
     QObject::connect(ui->comboBoxCryptoList, &QComboBox::currentTextChanged, this, &MainWindow::loadCollectionContents);
     QObject::connect(ui->buttonShowBarChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingBarChart);
     QObject::connect(ui->buttonShowPieChart, &QCommandLinkButton::clicked, this, &MainWindow::drawTrackingPieChart);
