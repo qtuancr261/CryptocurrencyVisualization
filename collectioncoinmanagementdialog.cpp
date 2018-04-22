@@ -16,7 +16,7 @@ CollectionCoinManagementDialog::CollectionCoinManagementDialog(QWidget *parent) 
     QObject::connect(ui->pushButtonMoveAllToRight, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveAllCoinsToTrackedCoins);
     QObject::connect(ui->pushButtonMoveAllToLeft, &QPushButton::clicked, this, &CollectionCoinManagementDialog::moveAllCoinsToAvailableCoins);
 
-    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::accepted, this, &CollectionCoinManagementDialog::checkNewCollectionContents);
+    QObject::connect(ui->buttonControllerBox, &QDialogButtonBox::accepted, this, &CollectionCoinManagementDialog::checkCollectionContents);
     QObject::connect(this, &CollectionCoinManagementDialog::accepted, this, &CollectionCoinManagementDialog::finishedCurrentAction);
     QObject::connect(this, &CollectionCoinManagementDialog::rejected, this, &CollectionCoinManagementDialog::finishedCurrentAction);
 }
@@ -30,6 +30,7 @@ void CollectionCoinManagementDialog::showAddNewCollectionCoin()
 {
     this->setWindowTitle("Add new collection");
     this->setWindowIcon(QIcon(":/ico/collectionAdd.ico"));
+    ui->lineEditCollectionName->setEnabled(true);
     QHashIterator<QString, CoinPtr> iterQHash{trackedCoins};
     // Remove all items when a user loads our dialog in AddNewCollectionMode;
     if (ui->listWidgetAvailableCoins->count() == 0 && ui->listWidgetTrackedCoins->count() == 0)
@@ -55,26 +56,18 @@ void CollectionCoinManagementDialog::showConfigureCurrentCollectionCoin(const Co
 {
     this->setWindowTitle("Configure collection");
     this->setWindowIcon(QIcon(":/ico/collectionSetting.ico"));
+    ui->lineEditCollectionName->setEnabled(false);
     ui->lineEditCollectionName->setText(coinCollection.getName());
     loadAvailableCoinsAndTrackedCoins(coinDataStation, coinCollection);
     this->show();
     this->raise();
     dialogMode = Mode::ConfigureCurrentCollectionMode;
-
 }
 
-void CollectionCoinManagementDialog::getAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
+void CollectionCoinManagementDialog::setAvailableCoins(const QHash<QString, CoinPtr> &availableCoins)
 {
     trackedCoins = availableCoins;
     emit finishedPreloadAvailableCoins();
-    /*QHashIterator<QString, CoinPtr> iterQHash{availableCoins};
-    while(iterQHash.hasNext())
-    {
-        iterQHash.next();
-        ui->listWidgetAvailableCoins->addItem(iterQHash.value()->getDisplayItem().get());
-    }*/
-    //ui->listWidgetAvailableCoins->show();
-    //showAddNewCollectionCoin();
 }
 
 void CollectionCoinManagementDialog::loadAvailableCoinsAndTrackedCoins(const CoinDataStation &coinDataStation, const DataObserver &coinCollection)
@@ -140,7 +133,7 @@ void CollectionCoinManagementDialog::moveAllCoinsToAvailableCoins()
     }
 }
 
-void CollectionCoinManagementDialog::checkNewCollectionContents()
+void CollectionCoinManagementDialog::checkCollectionContents()
 {
     if (dialogMode == Mode::AddNewCollectionMode)
     {
@@ -158,6 +151,22 @@ void CollectionCoinManagementDialog::checkNewCollectionContents()
                 //qDebug() << ui->listWidgetTrackedCoins->item(index)->text().section(" ", 0, 0);
             }
             emit requestToCreateANewCollectionWith(ui->lineEditCollectionName->text(), contentsSymbol);
+        }
+    }
+    else if (dialogMode == Mode::ConfigureCurrentCollectionMode)
+    {
+        if (ui->listWidgetTrackedCoins->count() == 0)
+            QMessageBox::warning(this, "Cannot modify the collection", "You must choose at least one item for collection contents");
+        else
+        {
+            this->accept();
+            QStringList symbolList;
+            for (int index{}; index < ui->listWidgetTrackedCoins->count(); index++)
+            {
+                symbolList.append(ui->listWidgetTrackedCoins->item(index)->text().section(" ", 0, 0));
+                qDebug() << ui->listWidgetTrackedCoins->item(index)->text().section(" ", 0, 0);
+            }
+            emit requestToModifyCurrentCollectionContents(ui->lineEditCollectionName->text(), symbolList);
         }
     }
 }
