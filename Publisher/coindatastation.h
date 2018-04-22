@@ -35,13 +35,15 @@ signals:
     void parseLastValueOfAllCoinsCompleted(const QHash<QString, CoinPtr>& trackedCoins);
     void parseMaxValueIn7DaysOfAllCoinsCompleted(const QHash<QString, CoinPtr>& trackedCoins);
     void creatingANewCollectionCompleted(const QString& collectionName);
+    void modifyingCollectionContentsCompleted(const QString& collectionName);
 public slots:
     void getLastValueOfAllCoins();
     void parseLastValueOfALLCoins(QNetworkReply* replyFromServer);
     void getMaxValueIn7DaysOfAllCoins();
     void parseMaxValueIn7DaysOfAllCoins(QNetworkReply* replyFromServer);
     void replyFromServerArrived(const QString &replyDiscription);
-    void createANewCollectionWith(const QString& collectionName, const QStringList& contents);
+    void createANewCollection(const QString& collectionName, const QStringList& contents);
+    void modifyCollectionContents(const QString& collectionName, const QStringList& contents);
     // DataPublisher interface
 public:
     virtual void registerObserver(const DataObserverPtr &observer) override;

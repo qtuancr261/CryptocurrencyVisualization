@@ -138,7 +138,7 @@ void CoinDataStation::replyFromServerArrived(const QString& replyDiscription)
 
 }
 
-void CoinDataStation::createANewCollectionWith(const QString &collectionName, const QStringList &contents)
+void CoinDataStation::createANewCollection(const QString &collectionName, const QStringList &contents)
 {
     CoinCollectionPtr newCollection{make_shared<CoinCollection>(CoinCollection(collectionName))};
     for (const QString& symbol : contents)
@@ -151,6 +151,21 @@ void CoinDataStation::createANewCollectionWith(const QString &collectionName, co
     emit creatingANewCollectionCompleted(collectionName);
 }
 
+void CoinDataStation::modifyCollectionContents(const QString &collectionName, const QStringList &contents)
+{
+    if (observers.contains(collectionName))
+    {
+        DataObserverPtr collection{observers.value(collectionName)};
+        collection->getRefTrackedCoins().clear();
+        // :3 We use a trick to modify content
+
+        for (const QString& symbol : contents)
+        {
+            collection->addNewTrackedCoin(symbol, trackedCoins.value(symbol));
+        }
+    }
+    emit modifyingCollectionContentsCompleted(collectionName);
+}
 
 void CoinDataStation::registerObserver(const DataObserverPtr &observer)
 {
