@@ -32,4 +32,4 @@ Screenshots on KDE neon User Edition 5.12 x86_64 GNU/LINUX
 ![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230816.png)
 ===========
 ## Management Dialog
-![](https://https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230754.png)
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230754.png)
