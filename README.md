@@ -23,7 +23,9 @@ Using web services provided by https://cryws.herokuapp.com
 ```
 Screenshots
 ===========
+Running on KDE neon User Edition 5.12 x86_64 GNU/LINUX
 ![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133713.png)
+===========
 ![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133808.png)
 ![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133825.png)
 ![](https://https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133932.png)
