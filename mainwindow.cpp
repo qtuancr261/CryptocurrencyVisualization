@@ -313,7 +313,7 @@ void MainWindow::loadCurrentSelectedTrackedCoin(const QString &currentCoinSymbol
     QString coinSymbol{infoList.at(0)};
     //qDebug() << "infolist size: " << infoList.size();
     ui->labelCoinName->setText(infoList.at(0));
-    ui->labelCoinIcon->setPixmap(QPixmap(QString("color/%1.png").arg(coinSymbol)));
+    ui->labelCoinIcon->setPixmap(QPixmap(QString(":/ico/colorIcons/%1.png").arg(coinSymbol)));
     if (dataStation->getTrackedCoins().contains(coinSymbol))
     {
         // Get the coin is being selected by user
