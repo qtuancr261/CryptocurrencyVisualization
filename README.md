@@ -21,3 +21,7 @@ Using web services provided by https://cryws.herokuapp.com
               \_/  |_|___/\__,_|\__,_|_|_/___\__,_|\__|_|\___/|_| |_|
                                                                      
 ```
+Screenshots
+===========
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133808.png)
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133808.png)
