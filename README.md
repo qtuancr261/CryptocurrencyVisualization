@@ -21,13 +21,15 @@ Using web services provided by https://cryws.herokuapp.com
               \_/  |_|___/\__,_|\__,_|_|_/___\__,_|\__|_|\___/|_| |_|
                                                                      
 ```
-Screenshots
+Screenshots on KDE neon User Edition 5.12 x86_64 GNU/LINUX
 ===========
-KDE neon User Edition 5.12 x86_64 GNU/LINUX
-![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133713.png)
+## Bar chart
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230517.png)
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230537.png)
 ===========
-![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133808.png)
+## Pie Chart
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230554.png)
+![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230816.png)
 ===========
-![](https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133825.png)
-===========
-![](https://https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180418_133932.png)
+## Management Dialog
+![](https://https://github.com/qtuancr261/CryptocurrencyVisualization/blob/master/Screenshots/Screenshot_20180609_230754.png)
