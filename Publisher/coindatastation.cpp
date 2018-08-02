@@ -129,6 +129,7 @@ void CoinDataStation::parseMaxValueIn7DaysOfAllCoins(QNetworkReply *replyFromSer
 
 void CoinDataStation::replyFromServerArrived(const QString& replyDiscription)
 {
+    qDebug() << "reply ok";
     QString collectionName{replyDiscription.section("|", 1, 1)};
     QString replyType{replyDiscription.section("|", 2, 2)};
     if (collectionName == "ALL" && replyType == "lastvalue")
