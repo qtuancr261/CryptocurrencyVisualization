@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->radioButtonMarketcap, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
     QObject::connect(ui->radioButtonPrice, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
     QObject::connect(ui->radioButtonVolume, &QRadioButton::clicked, this, &MainWindow::updateChartTrackedValue);
+    QObject::connect(ui->actionAbout_Qt, &QAction::triggered, this, &MainWindow::aboutQt);
 }
 
 MainWindow::~MainWindow()
@@ -362,4 +363,9 @@ void MainWindow::confirmDeletingACollection()
         }
     }
 
+}
+
+void MainWindow::aboutQt()
+{
+    QMessageBox::aboutQt(this, "About Qt lib");
 }

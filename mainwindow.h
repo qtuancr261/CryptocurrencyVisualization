@@ -12,6 +12,8 @@
 #include <QPieSlice>
 #include <QValueAxis>
 #include <QComboBox>
+#include <QDialog>
+#include <QMessageBox>
 namespace Ui {
 class MainWindow;
 }
@@ -48,6 +50,7 @@ public slots:
     void updateChartTheme(int themeID);
     void checkCollectionContentsBeforeConfiguringIt();
     void confirmDeletingACollection();
+    void aboutQt();
 };
 
 #endif // MAINWINDOW_H
