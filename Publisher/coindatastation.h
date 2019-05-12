@@ -1,24 +1,23 @@
 #ifndef COINDATASTATION_H
 #define COINDATASTATION_H
 
-#include <QObject>
 #include <QHash>
 #include <QHashIterator>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QtDebug>
-#include "Publisher/datapublisher.h"
-#include "Model/crywsapi.h"
-#include "Model/coincollection.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
 #include <QSignalMapper>
+#include <QtDebug>
+#include "Model/coincollection.h"
+#include "Model/crywsapi.h"
+#include "Publisher/datapublisher.h"
 using DataObserverPtr = shared_ptr<DataObserver>;
 using CoinCollectionPtr = shared_ptr<CoinCollection>;
-class CoinDataStation : public QObject, public DataPublisher
-{
+class CoinDataStation : public QObject, public DataPublisher {
     Q_OBJECT
 private:
     QHash<QString, CoinPtr> trackedCoins;
@@ -28,8 +27,9 @@ private:
     QSignalMapper* repliesMapper;
     int replyCount;
     CryWSAPI API;
+
 public:
-    explicit CoinDataStation(QObject *parent = nullptr);
+    explicit CoinDataStation(QObject* parent = nullptr);
 
 signals:
     void parseLastValueOfAllCoinsCompleted(const QHash<QString, CoinPtr>& trackedCoins);
@@ -41,17 +41,17 @@ public slots:
     void parseLastValueOfALLCoins(QNetworkReply* replyFromServer);
     void getMaxValueIn7DaysOfAllCoins();
     void parseMaxValueIn7DaysOfAllCoins(QNetworkReply* replyFromServer);
-    void replyFromServerArrived(const QString &replyDiscription);
+    void replyFromServerArrived(const QString& replyDiscription);
     void createANewCollection(const QString& collectionName, const QStringList& contents);
     void modifyCollectionContents(const QString& collectionName, const QStringList& contents);
     // DataPublisher interface
 public:
-    virtual void registerObserver(const DataObserverPtr &observer) override;
-    virtual void removeObserver(const DataObserverPtr &observer) override;
+    virtual void registerObserver(const DataObserverPtr& observer) override;
+    virtual void removeObserver(const DataObserverPtr& observer) override;
     virtual void notifyAllObservers() override;
     const QHash<QString, CoinPtr>& getTrackedCoins() const;
     const QHash<QString, DataObserverPtr>& getObservers() const;
     QHash<QString, DataObserverPtr>& getRefObservers();
 };
 
-#endif // COINDATASTATION_H
+#endif  // COINDATASTATION_H

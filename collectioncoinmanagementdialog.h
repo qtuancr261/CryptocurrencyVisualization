@@ -2,26 +2,24 @@
 #define COLLECTIONCOINMANAGEMENTDIALOG_H
 
 #include <QDialog>
-#include <QListWidget>
-#include "Publisher/coindatastation.h"
-#include "Model/coincollection.h"
-#include <QList>
-#include <QMessageBox>
 #include <QHelpEvent>
-#include <QToolTip>
 #include <QLineEdit>
+#include <QList>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QToolTip>
+#include "Model/coincollection.h"
+#include "Publisher/coindatastation.h"
 namespace Ui {
 class CollectionCoinManagementDialog;
 }
 
-class CollectionCoinManagementDialog : public QDialog
-{
+class CollectionCoinManagementDialog : public QDialog {
     Q_OBJECT
-
 public:
-    explicit CollectionCoinManagementDialog(QWidget *parent = nullptr);
+    explicit CollectionCoinManagementDialog(QWidget* parent = nullptr);
     ~CollectionCoinManagementDialog();
-    Ui::CollectionCoinManagementDialog *getUi() const;
+    Ui::CollectionCoinManagementDialog* getUi() const;
 
 public slots:
     void showAddNewCollectionCoin();
@@ -33,25 +31,21 @@ public slots:
     void moveAllCoinsToTrackedCoins();
     void moveAllCoinsToAvailableCoins();
     void checkCollectionContents();
-    //void configureCurrentCollectionContents();
+    // void configureCurrentCollectionContents();
 signals:
     void finishedCurrentAction();
     void finishedPreloadAvailableCoins();
     void requestToCreateANewCollectionWith(const QString& collectionName, const QStringList& contents);
     void requestToModifyCurrentCollectionContents(const QString& collectionName, const QStringList& contents);
+
 private:
-    Ui::CollectionCoinManagementDialog *ui;
+    Ui::CollectionCoinManagementDialog* ui;
     QHash<QString, CoinPtr> trackedCoins;
-    enum class Mode
-    {
-        NoMode,
-        AddNewCollectionMode,
-        ConfigureCurrentCollectionMode
-    };
+    enum class Mode { NoMode, AddNewCollectionMode, ConfigureCurrentCollectionMode };
     Mode dialogMode;
     // QWidget interface
 protected:
-    //virtual void focusInEvent(QFocusEvent *event) override;
+    // virtual void focusInEvent(QFocusEvent *event) override;
 };
 
-#endif // COLLECTIONCOINMANAGEMENTDIALOG_H
+#endif  // COLLECTIONCOINMANAGEMENTDIALOG_H

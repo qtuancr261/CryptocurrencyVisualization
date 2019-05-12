@@ -1,10 +1,9 @@
 #ifndef CRYWSAPI_H
 #define CRYWSAPI_H
 
-#include <QUrl>
 #include <QString>
-class CryWSAPI
-{
+#include <QUrl>
+class CryWSAPI {
 private:
     QString hostname;
     QString apiCoins;
@@ -12,10 +11,11 @@ private:
     QString getLastValueOfAllCoins;
     QString getSpecificCoinDataWithoutAllValues;
     QString apiAccount;
+
 public:
     CryWSAPI();
     QUrl getMaxValueIn7DaysOfAllCoinsURL() const;
     QUrl getLastValueOfAllCoinsUrl() const;
 };
 
-#endif // CRYWSAPI_H
+#endif  // CRYWSAPI_H

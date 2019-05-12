@@ -1,35 +1,34 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include <QMainWindow>
-#include "Publisher/coindatastation.h"
-#include "collectioncoinmanagementdialog.h"
-#include <QtCharts>
+#include <QBarCategoryAxis>
+#include <QBarSet>
 #include <QChart>
 #include <QChartView>
-#include <QBarSet>
-#include <QBarCategoryAxis>
+#include <QComboBox>
+#include <QDialog>
+#include <QMainWindow>
+#include <QMessageBox>
 #include <QPieSeries>
 #include <QPieSlice>
 #include <QValueAxis>
-#include <QComboBox>
-#include <QDialog>
-#include <QMessageBox>
+#include <QtCharts>
+#include "Publisher/coindatastation.h"
+#include "collectioncoinmanagementdialog.h"
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
-    QChartView *getChartView() const;
+    QChartView* getChartView() const;
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
     CoinDataStation* dataStation;
     CollectionCoinManagementDialog* collectionManagerDialog;
     QChartView* chartView;
@@ -53,4 +52,4 @@ public slots:
     void aboutQt();
 };
 
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

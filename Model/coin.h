@@ -1,27 +1,26 @@
 #ifndef COIN_H
 #define COIN_H
-#include <QString>
-#include <QIcon>
-#include <QVector>
-#include <QListWidgetItem>
-#include <QtDebug>
 #include <QDateTime>
+#include <QIcon>
+#include <QListWidgetItem>
+#include <QString>
+#include <QVector>
+#include <QtDebug>
 #include <memory>
-using std::shared_ptr;
 using std::make_shared;
+using std::shared_ptr;
 using QListWidgetItemPtr = shared_ptr<QListWidgetItem>;
 using ulong = unsigned long;
-class Coin
-{
+class Coin {
 private:
     QString name;
     QString symbol;
     QListWidgetItemPtr displayItem;
     long available_supply;
+
 public:
     explicit Coin(QString name, QString symbol);
-    struct value
-    {
+    struct value {
         QDateTime timeStamp;
         double price;
         double marketcap;
@@ -35,19 +34,20 @@ public:
     void setSymbol(const QString &value);
     long getAvailable_supply() const;
     void setAvailable_supply(long value);
-    QListWidgetItemPtr& getRefDisplayItem();
+    QListWidgetItemPtr &getRefDisplayItem();
     void setDisplayItem(const QListWidgetItemPtr &value);
     ~Coin();
     QListWidgetItemPtr getDisplayItem() const;
-    value& getLastValue();
+    value &getLastValue();
     void setLastValue(const value &value);
-    const QVector<value>& getAllValues() const;
-    QVector<value>& getRefAllValues();
+    const QVector<value> &getAllValues() const;
+    QVector<value> &getRefAllValues();
 
     void setAllValues(const QVector<value> &value);
+
 private:
     value lastValue;
     QVector<value> allValues;
 };
 
-#endif // COIN_H
+#endif  // COIN_H
